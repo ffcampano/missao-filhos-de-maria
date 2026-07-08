@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão Filhos de Maria — Casa de Maria · Itajaí</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:       #1a4fa0;
+  --blue-deep:  #0f2f6b;
+  --blue-bright:#2563c7;
+  --blue-sky:   #3a7bd5;
+  --blue-light: #d6e4f7;
+  --blue-pale:  #edf4ff;
+  --gold:       #c9a84c;
+  --gold-light: #e8c96e;
+  --gold-pale:  #f5e9c8;
+  --cream:      #fdfaf4;
+  --white:      #ffffff;
+  --text-dark:  #0d1f3c;
+  --text-mid:   #2a4a7a;
+  --gray-warm:  #f0ede8;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+/* ══ NAV ══ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 3rem;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(26,79,160,0.12);
+  box-shadow: 0 2px 20px rgba(26,79,160,0.07);
+  transition: all 0.3s ease;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.nav-logo-badge {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(26,79,160,0.3);
+}
+
+.nav-logo-text {
+  line-height: 1.2;
+}
+
+.nav-logo-text strong {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--blue-deep);
+  text-transform: uppercase;
+}
+
+.nav-logo-text span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.nav-links a:hover { color: var(--blue); }
+
+.nav-cta {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  padding: 0.65rem 1.5rem;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.3s;
+  box-shadow: 0 3px 12px rgba(26,79,160,0.25);
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(26,79,160,0.35);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--blue);
+  transition: all 0.3s;
+}
+
+/* ══ HERO ══ */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(150deg, var(--blue-deep) 0%, var(--blue) 50%, var(--blue-bright) 100%);
+}
+
+/* Wave pattern */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 120px;
+  background: var(--cream);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+/* Dot grid */
+.hero-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+}
+
+/* Light circle */
+.hero-glow {
+  position: absolute;
+  top: -10%; right: -5%;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-glow-2 {
+  position: absolute;
+  bottom: 10%; left: -10%;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 7rem 3rem 10rem;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(201,168,76,0.35);
+  background: rgba(201,168,76,0.08);
+  border-radius: 2px;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  max-width: 480px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-hero-primary {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue-deep);
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+}
+
+.btn-hero-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(201,168,76,0.4);
+}
+
+.btn-hero-secondary {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.btn-hero-secondary:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.6);
+}
+
+/* Right card */
+.hero-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  animation: hero-card-in 1.2s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes hero-card-in {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+.hero-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  padding: 0.3rem 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-card-badge span {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.hero-card-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.hero-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.hero-card-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.hero-card-loc {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.pix-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px dashed rgba(201,168,76,0.4);
+  border-radius: 4px;
+  padding: 1.2rem 1.4rem;
+}
+
+.pix-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.pix-key {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.85);
+  word-break: break-all;
+}
+
+/* ══ SECTION COMMONS ══ */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 1rem;
+}
+
+.section-tag::before {
+  content: '';
+  display: block;
+  width: 28px; height: 2px;
+  background: var(--gold);
+}
+
+.section-h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 3.5vw, 3rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+}
+
+.section-h2 em { font-style: italic; color: var(--blue); }
+
+.section-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: #4a5a7a;
+  line-height: 1.8;
+}
+
+/* ══ MISSÃO ══ */
+.missao {
+  background: var(--cream);
+  padding: 8rem 3rem;
+}
+
+.missao-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.manifesto {
+  background: var(--white);
+  border-left: 4px solid var(--blue);
+  padding: 2.5rem 2.5rem;
+  margin-top: 2.5rem;
+  position: relative;
+  box-shadow: 0 4px 30px rgba(26,79,160,0.06);
+}
+
+.manifesto::before {
+  content: '"';
+  position: absolute;
+  top: -20px; left: 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 6rem;
+  color: var(--blue-light);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.manifesto p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--text-mid);
+  line-height: 1.8;
+  position: relative;
+}
+
+/* Visual block */
+.missao-visual {
+  position: relative;
+}
+
+.missao-img-wrap {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(26,79,160,0.15);
+}
+
+.missao-img-placeholder {
+  width: 100%;
+  padding-top: 130%;
+  background: linear-gradient(150deg, var(--blue-deep) 0%, var(--blue) 60%, var(--blue-sky) 100%);
+  position: relative;
+}
+
+.missao-img-placeholder-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+/* Field illustration */
+.field-svg { width: 90%; max-width: 280px; }
+
+.missao-tag-float {
+  position: absolute;
+  bottom: -20px; right: -20px;
+  background: var(--white);
+  border-top: 3px solid var(--gold);
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  min-width: 160px;
+}
+
+.missao-tag-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--blue);
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.missao-tag-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: #6a7a9a;
+  text-transform: uppercase;
+}
+
+/* ══ CASA DE MARIA ══ */
+.casa {
+  padding: 8rem 3rem;
+  background: var(--white);
+}
+
+.casa-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.casa-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 5rem;
+}
+
+.casa-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.casa-card {
+  background: var(--blue-pale);
+  border: 1px solid rgba(26,79,160,0.1);
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.casa-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.casa-card:hover { background: var(--blue-light); transform: translateY(-5px); box-shadow: 0 15px 40px rgba(26,79,160,0.12); }
+.casa-card:hover::after { transform: scaleX(1); }
+
+.casa-card-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 6px 20px rgba(26,79,160,0.25);
+}
+
+.casa-card-h {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.75rem;
+}
+
+.casa-card-p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: #5a6a8a;
+  line-height: 1.75;
+}
+
+/* Progress */
+.progress-section {
+  background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue) 100%);
+  border-radius: 8px;
+  padding: 3rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  box-shadow: 0 20px 60px rgba(26,79,160,0.2);
+}
+
+.progress-left h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.progress-left p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.12);
+  border-radius: 100px;
+  height: 8px;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 38%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+  border-radius: 100px;
+  position: relative;
+  animation: bar-grow 1.5s 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes bar-grow {
+  from { width: 0; }
+  to   { width: 38%; }
+}
+
+.progress-pct {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+}
+
+.pix-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 2rem;
+}
+
+.pix-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pix-email-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.pix-email {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.9);
+  word-break: break-all;
+  letter-spacing: 0.02em;
+}
+
+.pix-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue-deep);
+  background: var(--gold);
+  border: none;
+  padding: 0.7rem 1.3rem;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: 700;
+  transition: all 0.3s;
+  width: 100%;
+  justify-content: center;
+}
+
+.copy-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* ══ QUEM SOMOS ══ */
+.quem-somos {
+  padding: 8rem 3rem;
+  background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.quem-somos::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 0%, rgba(26,79,160,0.03) 100%);
+  pointer-events: none;
+}
+
+.quem-somos-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.pillar-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: var(--white);
+  border-radius: 4px;
+  border: 1px solid rgba(26,79,160,0.08);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(26,79,160,0.04);
+}
+
+.pillar-row:hover {
+  box-shadow: 0 8px 30px rgba(26,79,160,0.1);
+  transform: translateX(4px);
+  border-color: rgba(26,79,160,0.2);
+}
+
+.pillar-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--blue-light);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.pillar-content h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+  margin-bottom: 0.4rem;
+}
+
+.pillar-content p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: #5a6a8a;
+  line-height: 1.65;
+}
+
+/* Right: big text manifesto */
+.manifesto-big {
+  background: linear-gradient(150deg, var(--blue-deep) 0%, var(--blue) 100%);
+  border-radius: 6px;
+  padding: 3.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(26,79,160,0.2);
+}
+
+.manifesto-big::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+.manifesto-big-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.1);
+  line-height: 1;
+  margin-bottom: -1.5rem;
+}
+
+.manifesto-big p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.85;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.manifesto-big p:last-of-type { margin-bottom: 0; }
+
+/* ══ CTA ══ */
+.cta {
+  padding: 7rem 3rem;
+  background: var(--cream);
+  text-align: center;
+}
+
+.cta-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.cta h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1.2rem;
+  line-height: 1.2;
+}
+
+.cta h2 em { font-style: italic; color: var(--blue); }
+
+.cta p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  color: #5a6a8a;
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+}
+
+.cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+.btn-blue {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  padding: 1rem 2.2rem;
+  text-decoration: none;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(26,79,160,0.25);
+}
+
+.btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,79,160,0.35); }
+
+.btn-outline-blue {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: transparent;
+  border: 1.5px solid var(--blue);
+  padding: 1rem 2.2rem;
+  text-decoration: none;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.btn-outline-blue:hover { background: var(--blue-pale); }
+
+/* ══ CONTATO ══ */
+.contato {
+  padding: 8rem 3rem;
+  background: var(--white);
+}
+
+.contato-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.contact-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding: 1.2rem;
+  border-radius: 4px;
+  transition: background 0.25s;
+}
+
+.contact-item:hover { background: var(--blue-pale); }
+
+.contact-icon {
+  width: 44px; height: 44px;
+  background: var(--blue-pale);
+  border: 1px solid rgba(26,79,160,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.contact-val {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  font-weight: 400;
+}
+
+.form-wrap {
+  background: var(--blue-pale);
+  border-radius: 6px;
+  padding: 2.5rem;
+  border: 1px solid rgba(26,79,160,0.1);
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+
+.form-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--blue);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.form-input, .form-textarea {
+  background: var(--white);
+  border: 1.5px solid rgba(26,79,160,0.12);
+  border-radius: 3px;
+  color: var(--text-dark);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.8rem 1rem;
+  outline: none;
+  transition: border-color 0.25s;
+  resize: none;
+}
+
+.form-input::placeholder, .form-textarea::placeholder { color: #aab0c0; }
+.form-input:focus, .form-textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,79,160,0.08); }
+.form-textarea { height: 120px; }
+
+/* ══ FOOTER ══ */
+footer {
+  background: var(--blue-deep);
+  padding: 4rem 3rem 2rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer-logo-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.footer-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.footer-socials { display: flex; gap: 0.6rem; }
+
+.soc-btn {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: all 0.25s;
+}
+
+.soc-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+
+.footer-col-h {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+
+.footer-links a {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.footer-links a:hover { color: rgba(255,255,255,0.85); }
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copy {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.3);
+}
+
+.footer-verse {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: rgba(201,168,76,0.45);
+}
+
+/* ══ REVEAL ══ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-left { opacity: 0; transform: translateX(-30px); transition: opacity 0.75s ease, transform 0.75s ease; }
+.reveal-left.visible { opacity: 1; transform: none; }
+
+/* ══ HERO ANIMATION ══ */
+.hero-content-left {
+  animation: left-in 1s 0.1s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes left-in {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 960px) {
+  nav { padding: 0.9rem 1.5rem; }
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; padding: 6rem 1.5rem 8rem; }
+  .hero-card { max-width: 500px; }
+  .missao-inner, .quem-somos-inner, .contato-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .missao-visual { display: none; }
+  .casa-grid { grid-template-columns: 1fr; }
+  .progress-section { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .missao, .casa, .quem-somos, .cta, .contato { padding: 5rem 1.5rem; }
+}
+
+/* ══ GOLD ACCENT BAR ══ */
+.gold-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--gold) 50%, var(--blue) 100%);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-badge">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2v20M2 12h20" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="12" cy="8" r="3" stroke="rgba(201,168,76,0.8)" stroke-width="1.2" fill="none"/>
+      </svg>
+    </div>
+    <div class="nav-logo-text">
+      <strong>Missão Filhos de Maria</strong>
+      <span>Itajaí e Região</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#missao">Missão</a></li>
+    <li><a href="#casa">Casa de Maria</a></li>
+    <li><a href="#quem">Quem Somos</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <a href="#casa" class="nav-cta">Colabore</a>
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+
+  <div class="hero-inner">
+    <!-- Left -->
+    <div class="hero-content-left">
+      <p class="hero-eyebrow">
+        <svg width="10" height="12" viewBox="0 0 10 12" fill="none"><path d="M5 0v12M0 5h10" stroke="#e8c96e" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Missão de Evangelização
+      </p>
+      <h1 class="hero-title">
+        Missão<br><em>Filhos de</em><br>Maria
+      </h1>
+      <p class="hero-sub">
+        Nascemos no coração de Deus e encontramos lugar no coração de cada um de nós. Somos histórias diferentes, unidas por um mesmo chamado.
+      </p>
+      <div class="hero-actions">
+        <a href="#casa" class="btn-hero-primary">Casa de Maria 💙</a>
+        <a href="#missao" class="btn-hero-secondary">Nossa Missão</a>
+      </div>
+    </div>
+
+    <!-- Right card -->
+    <div class="hero-card">
+      <div class="hero-card-badge">
+        <div class="hero-card-badge-dot"></div>
+        <span>Campanha Ativa</span>
+      </div>
+      <h2 class="hero-card-title">Casa de Maria — Lugar de Acolhida, Escuta e Oração</h2>
+      <p class="hero-card-desc">
+        A primeira Casa de Maria de Itajaí e Região está sendo construída. Um espaço de missão, acolhimento e vivência fraterna.
+      </p>
+      <div class="hero-card-loc">
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z" stroke="rgba(255,255,255,0.4)" stroke-width="1.1"/><circle cx="6" cy="5" r="1.5" stroke="rgba(255,255,255,0.4)" stroke-width="1"/></svg>
+        Itajaí, Santa Catarina
+      </div>
+      <div class="pix-box">
+        <p class="pix-label">🔑 Chave Pix — Colaborador</p>
+        <p class="pix-key">missaofilhosdemaria2026@gmail.com</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-bar"></div>
+
+<!-- MISSÃO -->
+<section class="missao" id="missao">
+  <div class="missao-inner">
+    <!-- Visual -->
+    <div class="missao-visual reveal-left">
+      <div class="missao-img-wrap">
+        <div class="missao-img-placeholder">
+          <div class="missao-img-placeholder-inner">
+            <!-- Field / land SVG illustration -->
+            <svg class="field-svg" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Sky -->
+              <rect width="320" height="150" fill="rgba(255,255,255,0.05)" rx="4"/>
+              <!-- Sun glow -->
+              <circle cx="260" cy="40" r="30" fill="rgba(201,168,76,0.15)"/>
+              <circle cx="260" cy="40" r="20" fill="rgba(201,168,76,0.2)"/>
+              <!-- Clouds -->
+              <ellipse cx="80" cy="45" rx="35" ry="12" fill="rgba(255,255,255,0.08)"/>
+              <ellipse cx="100" cy="38" rx="25" ry="10" fill="rgba(255,255,255,0.06)"/>
+              <!-- Cross on hill -->
+              <rect x="156" y="80" width="8" height="50" rx="1" fill="rgba(201,168,76,0.6)"/>
+              <rect x="140" y="95" width="40" height="6" rx="1" fill="rgba(201,168,76,0.6)"/>
+              <!-- Ground lines (rows) -->
+              <line x1="0" y1="165" x2="320" y2="155" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <line x1="0" y1="175" x2="320" y2="162" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <line x1="0" y1="185" x2="320" y2="170" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+              <line x1="0" y1="200" x2="320" y2="182" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+              <line x1="0" y1="220" x2="320" y2="198" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+              <!-- Ground fill -->
+              <path d="M0 160 Q160 148 320 155 L320 240 L0 240Z" fill="rgba(255,255,255,0.06)"/>
+              <!-- Trees far -->
+              <rect x="10" y="115" width="6" height="35" fill="rgba(255,255,255,0.1)"/>
+              <ellipse cx="13" cy="110" rx="14" ry="18" fill="rgba(255,255,255,0.08)"/>
+              <rect x="30" y="118" width="5" height="32" fill="rgba(255,255,255,0.1)"/>
+              <ellipse cx="32" cy="113" rx="12" ry="16" fill="rgba(255,255,255,0.07)"/>
+              <!-- IM text -->
+              <text x="160" y="220" text-anchor="middle" font-family="serif" font-size="14" fill="rgba(201,168,76,0.4)" letter-spacing="4" font-style="italic">Casa de Maria</text>
+            </svg>
+            <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,0.5);font-size:0.85rem;text-align:center;">Itajaí e Região · SC</p>
+          </div>
+        </div>
+      </div>
+      <div class="missao-tag-float">
+        <div class="missao-tag-num">💙</div>
+        <div class="missao-tag-label">Itajaí e Região</div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div>
+      <p class="section-tag reveal">Nossa história</p>
+      <h2 class="section-h2 reveal reveal-delay-1">A Missão nasceu no<br><em>coração de Deus</em></h2>
+      <p class="section-body reveal reveal-delay-2">
+        A Missão Filhos de Maria surgiu de um chamado profundo do Espírito Santo. Somos uma comunidade de evangelização que acredita que Maria nos conduz ao coração de seu Filho.
+      </p>
+
+      <div class="manifesto reveal reveal-delay-3">
+        <p>
+          "A Missão Filhos de Maria nasceu no coração de Deus e encontrou lugar no coração de cada um de nós. Somos histórias diferentes, marcadas por encontros, unidas por um mesmo chamado. Aqui, aprendemos a amar mais, a confiar mais e a viver algo que vai além de nós mesmos."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASA DE MARIA -->
+<section class="casa" id="casa">
+  <div class="casa-inner">
+    <div class="casa-header">
+      <p class="section-tag reveal" style="justify-content:center">Campanha</p>
+      <h2 class="section-h2 reveal reveal-delay-1">Casa de <em>Maria</em></h2>
+      <p class="section-body reveal reveal-delay-2">
+        A primeira Casa de Maria de Itajaí e Região — um espaço de missão, acolhimento, escuta e vivência fraterna. Eis que Deus soprou um novo mover do Espírito Santo em nossos corações!
+      </p>
+    </div>
+
+    <div class="casa-grid">
+      <div class="casa-card reveal">
+        <div class="casa-card-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 4L4 12v12h8v-7h4v7h8V12L14 4z" stroke="white" stroke-width="1.4" fill="none"/>
+          </svg>
+        </div>
+        <h3 class="casa-card-h">Acolhida</h3>
+        <p class="casa-card-p">Um lar para quem busca refúgio, paz e o calor de uma comunidade que ama no nome de Maria.</p>
+      </div>
+
+      <div class="casa-card reveal reveal-delay-1">
+        <div class="casa-card-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="11" r="5" stroke="white" stroke-width="1.4"/>
+            <path d="M4 24c0-4.4 4.5-8 10-8s10 3.6 10 8" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="casa-card-h">Escuta</h3>
+        <p class="casa-card-p">Espaço de silêncio, direção espiritual e encontro pessoal com Deus, através da escuta ativa e fraterna.</p>
+      </div>
+
+      <div class="casa-card reveal reveal-delay-2">
+        <div class="casa-card-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 4v20M4 10l10-6 10 6" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="14" cy="16" r="4" stroke="white" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+        <h3 class="casa-card-h">Oração</h3>
+        <p class="casa-card-p">Centro de adoração, Rosário, retiros e missão. A oração como alimento de toda a nossa vida apostólica.</p>
+      </div>
+    </div>
+
+    <!-- Campanha / Progress -->
+    <div class="progress-section reveal">
+      <div class="progress-left">
+        <h3>Ação Solidária — Amigos de Maria</h3>
+        <p>
+          Todo valor arrecadado será revertido para a quitação do terreno e para montar a estrutura da Casa da Mãe. Seja um colaborador!
+        </p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <p class="progress-pct">Em andamento · Participe você também</p>
+      </div>
+
+      <div class="pix-card">
+        <p class="pix-card-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 4.5H13L9.5 8l1.5 4.5L7 10 3.5 12.5 5 8 1 5.5h4.5Z" stroke="#e8c96e" stroke-width="1"/></svg>
+          Chave Pix — Colaborador
+        </p>
+        <div class="pix-email-box">
+          <p class="pix-email">missaofilhosdemaria2026@gmail.com</p>
+        </div>
+        <p class="pix-note">Entre em contato conosco e saiba como ajudar com sua doação. Deus abençoe cada colaborador! 🙏🏻</p>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText('missaofilhosdemaria2026@gmail.com').then(()=>{this.textContent='✓ Copiado!';setTimeout(()=>{this.innerHTML='Copiar chave Pix'},2000})">
+          Copiar chave Pix
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUEM SOMOS -->
+<section class="quem-somos" id="quem">
+  <div class="quem-somos-inner">
+    <div>
+      <p class="section-tag reveal">Nossa essência</p>
+      <h2 class="section-h2 reveal reveal-delay-1">Quem somos e<br><em>no que cremos</em></h2>
+      <p class="section-body reveal reveal-delay-2">
+        Somos uma missão de evangelização enraizada na devoção mariana, na fraternidade e no serviço ao próximo.
+      </p>
+
+      <div class="pillars">
+        <div class="pillar-row reveal">
+          <div class="pillar-num">01</div>
+          <div class="pillar-content">
+            <h4>Evangelização</h4>
+            <p>Levamos o anúncio de Jesus Cristo a todos, por todos os meios possíveis — nas ruas, nas paróquias e através das redes.</p>
+          </div>
+        </div>
+        <div class="pillar-row reveal reveal-delay-1">
+          <div class="pillar-num">02</div>
+          <div class="pillar-content">
+            <h4>Vida Fraterna</h4>
+            <p>Acreditamos que o amor entre irmãos é o maior testemunho. Aqui aprendemos a amar mais e a confiar mais.</p>
+          </div>
+        </div>
+        <div class="pillar-row reveal reveal-delay-2">
+          <div class="pillar-num">03</div>
+          <div class="pillar-content">
+            <h4>Devoção Mariana</h4>
+            <p>Maria é nossa Mãe e guia. Por sua intercessão, chegamos mais depressa ao coração de Jesus.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="manifesto-big reveal reveal-delay-1">
+      <div class="manifesto-big-quote">"</div>
+      <p>A Missão Filhos de Maria nasceu no coração de Deus e encontrou lugar no coração de cada um de nós.</p>
+      <p>Somos histórias diferentes, marcadas por encontros, unidas por um mesmo chamado.</p>
+      <p>Aqui, aprendemos a amar mais, a confiar mais e a viver algo que vai além de nós mesmos.</p>
+      <br>
+      <p style="color:rgba(201,168,76,0.7);font-size:1rem;font-family:'Cinzel',serif;letter-spacing:0.1em;font-style:normal;">— Missão Filhos de Maria</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-inner">
+    <p class="section-tag reveal" style="justify-content:center">Junte-se a nós</p>
+    <h2 class="reveal reveal-delay-1">Seja um <em>Filho de Maria</em> e faça parte desta missão</h2>
+    <p class="reveal reveal-delay-2">Todo cristão é chamado a evangelizar. Venha conhecer nossa missão, colaborar com a Casa de Maria e anunciar Jesus com alegria.</p>
+    <div class="cta-actions reveal reveal-delay-3">
+      <a href="#contato" class="btn-blue">Entrar em contato</a>
+      <a href="#casa" class="btn-outline-blue">Colaborar com o Pix</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section class="contato" id="contato">
+  <div class="contato-inner">
+    <div>
+      <p class="section-tag reveal">Fale conosco</p>
+      <h2 class="section-h2 reveal reveal-delay-1">Entre em <em>comunhão</em><br>conosco</h2>
+      <p class="section-body reveal reveal-delay-2" style="margin-bottom:2.5rem;">
+        Quer saber mais sobre a missão, participar de nossas atividades ou colaborar com a Casa de Maria? Entre em contato!
+      </p>
+
+      <div class="contact-item reveal">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="3" width="16" height="12" rx="1.5" stroke="#1a4fa0" stroke-width="1.2"/><path d="M1 6l8 5 8-5" stroke="#1a4fa0" stroke-width="1.1"/></svg>
+        </div>
+        <div>
+          <p class="contact-label">E-mail</p>
+          <p class="contact-val">missaofilhosdemaria2026@gmail.com</p>
+        </div>
+      </div>
+
+      <div class="contact-item reveal">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="4" stroke="#1a4fa0" stroke-width="1.2"/><circle cx="9" cy="9" r="3.5" stroke="#1a4fa0" stroke-width="1.1"/><circle cx="13" cy="5" r="1" fill="#1a4fa0"/></svg>
+        </div>
+        <div>
+          <p class="contact-label">Instagram</p>
+          <p class="contact-val">@missao.filhosdemaria</p>
+        </div>
+      </div>
+
+      <div class="contact-item reveal">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1C5.1 1 2 4.1 2 8c0 6 7 11 7 11s7-5 7-11c0-3.9-3.1-7-7-7z" stroke="#1a4fa0" stroke-width="1.2"/><circle cx="9" cy="8" r="2.2" stroke="#1a4fa0" stroke-width="1.1"/></svg>
+        </div>
+        <div>
+          <p class="contact-label">Localização</p>
+          <p class="contact-val">Itajaí e Região · Santa Catarina</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-wrap reveal reveal-delay-2">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-input" placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefone</label>
+          <input type="tel" class="form-input" placeholder="(47) 00000-0000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input type="email" class="form-input" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Como posso ajudar?</label>
+        <textarea class="form-textarea" placeholder="Quero colaborar com a Casa de Maria, participar da missão..."></textarea>
+      </div>
+      <button class="btn-blue" style="width:100%;border:none;cursor:pointer;padding:1rem;font-size:0.65rem;letter-spacing:0.2em;border-radius:2px;">
+        Enviar mensagem 💙
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <p class="footer-logo-name">Missão Filhos de Maria</p>
+        <p class="footer-tagline">"Nascemos no coração de Deus e encontramos lugar no coração de cada um de nós."</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/missao.filhosdemaria" target="_blank" class="soc-btn" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3.5" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.2"/><circle cx="11.5" cy="4.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="mailto:missaofilhosdemaria2026@gmail.com" class="soc-btn" aria-label="E-mail">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.1"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <p class="footer-col-h">Navegação</p>
+        <ul class="footer-links">
+          <li><a href="#missao">Nossa Missão</a></li>
+          <li><a href="#casa">Casa de Maria</a></li>
+          <li><a href="#quem">Quem Somos</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-col-h">Colabore</p>
+        <ul class="footer-links">
+          <li><a href="#casa">Pix — Casa de Maria</a></li>
+          <li><a href="https://www.instagram.com/missao.filhosdemaria" target="_blank">Instagram @missao.filhosdemaria</a></li>
+          <li><a href="mailto:missaofilhosdemaria2026@gmail.com">missaofilhosdemaria2026<br>@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Missão Filhos de Maria · Itajaí, SC</p>
+      <p class="footer-verse">Com Maria, ao coração de Jesus. 💙</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal, .reveal-left').forEach(el => observer.observe(el));
+
+// Navbar scroll
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 80) {
+    nav.style.boxShadow = '0 4px 30px rgba(26,79,160,0.12)';
+  } else {
+    nav.style.boxShadow = '0 2px 20px rgba(26,79,160,0.07)';
+  }
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
