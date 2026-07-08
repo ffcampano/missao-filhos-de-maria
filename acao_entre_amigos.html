@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ação Entre Amigos — Casa de Maria 💙</title>c
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+
+<!-- ════════════════════════════════════════════════════
+     ⚙️  CONFIGURAÇÃO SUPABASE
+     Substitua os dois valores abaixo pelas suas chaves
+     Você encontra em: Supabase → Settings → API
+     ════════════════════════════════════════════════════ -->
+<script>
+  const SUPABASE_URL = 'https://yoordwbcrsljjaspvzxx.supabase.co' ;
+  const SUPABASE_ANON_KEY = 'sb_publishable_rEDF7-akGi1M6bwyLXjsqQ_c8FiDLG4' ;
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --blue:      #1a4fa0;
+  --blue-deep: #0f2f6b;
+  --blue-mid:  #2563c7;
+  --blue-pale: #edf4ff;
+  --gold:      #c9a84c;
+  --gold-lt:   #e8c96e;
+  --green:     #16a34a;
+  --green-lt:  #dcfce7;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --red:       #dc2626;
+  --red-lt:    #fee2e2;
+  --gray:      #64748b;
+  --white:     #ffffff;
+  --text:      #0d1f3c;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Lato',sans-serif;background:#f8faff;color:var(--text);overflow-x:hidden}
+
+/* ── CONFIG BANNER (some until configured) ── */
+.config-banner{
+  background:linear-gradient(90deg,#7c3aed,#4f46e5);
+  color:#fff;padding:1rem 1.5rem;text-align:center;font-size:.85rem;line-height:1.6;
+  display:none;
+}
+.config-banner.show{display:block}
+.config-banner strong{font-weight:900}
+.config-banner code{
+  background:rgba(255,255,255,.2);padding:.1rem .5rem;border-radius:4px;
+  font-family:monospace;font-size:.8rem;
+}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 60%,var(--blue-mid) 100%);
+  padding:3rem 1.5rem 5rem;text-align:center;position:relative;overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;
+}
+header::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:80px;
+  background:#f8faff;clip-path:ellipse(55% 100% at 50% 100%);
+}
+.header-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);
+  border-radius:20px;padding:.35rem 1rem;margin-bottom:1.2rem;
+}
+.header-badge span{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.25em;color:var(--gold-lt);text-transform:uppercase;font-weight:500}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--gold-lt);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.8rem);font-weight:900;color:#fff;line-height:1.05;margin-bottom:.5rem}
+header h1 em{font-style:italic;color:var(--gold-lt)}
+.header-sub{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-style:italic;color:rgba(255,255,255,.75);margin-bottom:2rem}
+
+/* ── PRIZES ── */
+.prizes{position:relative;z-index:10;max-width:700px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;padding:0 1rem}
+.prize{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:1.2rem .8rem;text-align:center;position:relative;overflow:hidden}
+.prize::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.prize:nth-child(1)::before{background:linear-gradient(90deg,#ffd700,#ffec6e)}
+.prize:nth-child(2)::before{background:linear-gradient(90deg,#c0c0c0,#e8e8e8)}
+.prize:nth-child(3)::before{background:linear-gradient(90deg,#cd7f32,#e8a96e)}
+.prize-place{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.2em;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:.4rem}
+.prize-emoji{font-size:1.6rem;margin-bottom:.4rem;display:block}
+.prize-val{font-size:1.3rem;font-weight:900;color:#fff;line-height:1}
+.prize-label{font-size:.7rem;color:rgba(255,255,255,.55);margin-top:.2rem}
+
+/* ── INFO STRIP ── */
+.info-strip{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(26,79,160,.1);overflow:hidden;border:1px solid rgba(26,79,160,.08)}
+.info-item{padding:1.2rem 1rem;text-align:center;border-right:1px solid rgba(26,79,160,.07)}
+.info-item:last-child{border-right:none}
+.info-item-label{font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);margin-bottom:.3rem}
+.info-item-val{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--blue)}
+.info-item-sub{font-size:.7rem;color:var(--gray);margin-top:.1rem}
+
+/* ── MAIN ── */
+main{max-width:960px;margin:2.5rem auto;padding:0 1rem 4rem}
+
+/* ── HOW TO ── */
+.how-to{background:#fff;border-radius:10px;padding:2rem;border:1px solid rgba(26,79,160,.08);box-shadow:0 4px 20px rgba(26,79,160,.06);margin-bottom:2rem}
+.how-to h2{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;color:var(--blue);text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem}
+.how-to h2::before{content:'';display:block;width:24px;height:2px;background:var(--gold)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.step{text-align:center;padding:.75rem .5rem}
+.step-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-deep) 100%);color:#fff;font-weight:900;font-size:.9rem;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;box-shadow:0 4px 12px rgba(26,79,160,.25)}
+.step p{font-size:.82rem;color:var(--gray);line-height:1.5}
+.step strong{color:var(--text);font-size:.85rem}
+
+/* ── PIX BOX ── */
+.pix-box{background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 100%);border-radius:10px;padding:1.5rem 2rem;margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;box-shadow:0 8px 30px rgba(26,79,160,.2)}
+.pix-label{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;color:var(--gold-lt);text-transform:uppercase;font-weight:600;margin-bottom:.35rem}
+.pix-key{font-size:.95rem;color:#fff;font-weight:700;word-break:break-all}
+.pix-sub{font-size:.75rem;color:rgba(255,255,255,.55);margin-top:.2rem}
+.copy-pix{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--blue-deep);background:var(--gold-lt);border:none;padding:.75rem 1.5rem;border-radius:4px;cursor:pointer;white-space:nowrap;transition:all .25s;flex-shrink:0}
+.copy-pix:hover{background:#fff;transform:translateY(-1px)}
+
+/* ── COUNTERS ── */
+.counters{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.counter{background:#fff;border-radius:8px;padding:.75rem 1.2rem;flex:1;min-width:100px;text-align:center;border:1px solid rgba(26,79,160,.08);box-shadow:0 2px 10px rgba(26,79,160,.05)}
+.counter-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1}
+.counter-num.c-free{color:var(--blue)}
+.counter-num.c-reserved{color:var(--amber)}
+.counter-num.c-paid{color:var(--green)}
+.counter-num.c-value{color:var(--blue)}
+.counter-label{font-size:.65rem;color:var(--gray);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+
+/* ── PROGRESS ── */
+.progress-wrap{background:#fff;border-radius:8px;padding:1rem 1.5rem;margin-bottom:1.5rem;border:1px solid rgba(26,79,160,.08);box-shadow:0 2px 10px rgba(26,79,160,.05)}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.progress-top span{font-size:.75rem;color:var(--gray)}
+.progress-top strong{font-family:'Playfair Display',serif;color:var(--blue);font-size:.95rem}
+.progress-bar{height:10px;background:var(--blue-pale);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue) 0%,var(--gold) 100%);border-radius:100px;transition:width .6s ease;min-width:0}
+
+/* ── SYNC STATUS ── */
+.sync-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.sync-status{display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gray)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+.sync-dot.syncing{background:var(--amber)}
+.sync-dot.error{background:var(--red);animation:none}
+.btn-refresh{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:var(--blue-pale);border:1px solid rgba(26,79,160,.2);padding:.4rem .8rem;border-radius:4px;cursor:pointer;font-weight:600;transition:all .2s}
+.btn-refresh:hover{background:var(--blue);color:#fff}
+
+/* ── GRID HEADER ── */
+.grid-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem}
+.grid-header h2{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+.legend{display:flex;gap:1rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--gray)}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.legend-dot.free{background:var(--blue-pale);border:1px solid rgba(26,79,160,.2)}
+.legend-dot.reserved{background:var(--amber-lt);border:1px solid var(--amber)}
+.legend-dot.paid{background:var(--green-lt);border:1px solid var(--green)}
+
+/* ── NUMBER GRID ── */
+.number-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:5px;margin-bottom:2rem}
+.num-btn{aspect-ratio:1;border-radius:6px;border:none;cursor:pointer;font-size:.78rem;font-weight:700;font-family:'Lato',sans-serif;transition:all .18s ease;position:relative;display:flex;align-items:center;justify-content:center}
+.num-btn.free{background:var(--blue-pale);color:var(--blue);border:1.5px solid rgba(26,79,160,.15)}
+.num-btn.free:hover{background:var(--blue);color:#fff;transform:scale(1.1);z-index:2;box-shadow:0 4px 12px rgba(26,79,160,.3)}
+.num-btn.reserved{background:var(--amber-lt);color:var(--amber);border:1.5px solid rgba(217,119,6,.3);cursor:default}
+.num-btn.paid{background:var(--green-lt);color:var(--green);border:1.5px solid rgba(22,163,74,.3);cursor:default}
+.num-btn.loading-grid{background:#f1f5f9;color:#cbd5e1;border:1.5px solid #e2e8f0;cursor:default;animation:shimmer 1.5s ease-in-out infinite}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:12px;max-width:460px;width:100%;overflow:hidden;transform:translateY(20px);transition:transform .25s;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-overlay.open .modal{transform:none}
+.modal-header{background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 100%);padding:1.5rem 1.5rem 1.2rem}
+.modal-header h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;margin-bottom:.3rem}
+.modal-header p{font-size:.8rem;color:rgba(255,255,255,.65)}
+.modal-body{padding:1.5rem}
+.modal-num-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--blue-pale);border:2px solid var(--blue);border-radius:8px;padding:.6rem 1.2rem;margin-bottom:1.2rem;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--blue)}
+.modal-val{background:var(--green-lt);border:1px solid rgba(22,163,74,.3);border-radius:6px;padding:.75rem 1rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between}
+.modal-val span{font-size:.75rem;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.modal-val strong{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--green)}
+.form-group{margin-bottom:1rem}
+.form-label{display:block;font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:.4rem}
+.form-input{width:100%;background:var(--blue-pale);border:1.5px solid rgba(26,79,160,.15);border-radius:6px;padding:.75rem 1rem;font-family:'Lato',sans-serif;font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,79,160,.08)}
+.modal-pix{background:linear-gradient(135deg,var(--blue-deep),var(--blue));border-radius:8px;padding:1rem 1.2rem;margin-bottom:1.2rem}
+.modal-pix-label{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.2em;color:var(--gold-lt);text-transform:uppercase;font-weight:600;margin-bottom:.4rem}
+.modal-pix-key{font-size:.85rem;color:#fff;font-weight:700;word-break:break-all;margin-bottom:.5rem}
+.copy-modal-pix{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-deep);background:var(--gold-lt);border:none;padding:.45rem .9rem;border-radius:4px;cursor:pointer;width:100%;font-family:'Cinzel',serif;transition:background .2s}
+.copy-modal-pix:hover{background:#fff}
+.modal-note{font-size:.78rem;color:var(--gray);line-height:1.5;margin-bottom:1.2rem}
+.modal-footer{display:flex;gap:.75rem}
+.btn-cancel{flex:1;padding:.8rem;border:1.5px solid rgba(26,79,160,.2);background:#fff;border-radius:6px;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);cursor:pointer;font-weight:600;transition:all .2s}
+.btn-cancel:hover{border-color:var(--red);color:var(--red)}
+.btn-reserve{flex:2;padding:.8rem;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-deep) 100%);border:none;border-radius:6px;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#fff;cursor:pointer;font-weight:700;transition:all .2s;box-shadow:0 4px 12px rgba(26,79,160,.25)}
+.btn-reserve:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,79,160,.35)}
+.btn-reserve:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ── ADMIN ── */
+.admin-toggle{text-align:center;margin:1.5rem 0 .5rem}
+.btn-admin{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gray);background:#fff;border:1px solid rgba(26,79,160,.15);padding:.5rem 1.2rem;border-radius:4px;cursor:pointer;transition:all .2s}
+.btn-admin:hover{color:var(--blue);border-color:var(--blue)}
+.admin-panel{background:#fff;border-radius:10px;padding:1.5rem;border:2px dashed rgba(26,79,160,.2);margin-bottom:2rem;display:none}
+.admin-panel.open{display:block}
+.admin-title{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem;padding-bottom:.75rem;border-bottom:1px solid rgba(26,79,160,.1)}
+.admin-subtitle{font-size:.75rem;color:var(--gray);margin-bottom:1.2rem}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.admin-input-group{display:flex;gap:.5rem}
+.admin-input{flex:1;background:var(--blue-pale);border:1px solid rgba(26,79,160,.15);border-radius:4px;padding:.5rem .75rem;font-size:.85rem;font-family:'Lato',sans-serif;outline:none;color:var(--text)}
+.admin-input:focus{border-color:var(--blue)}
+.btn-sm{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:none;padding:.5rem .9rem;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif;white-space:nowrap;transition:all .2s}
+.btn-sm.green{background:var(--green-lt);color:var(--green)}
+.btn-sm.green:hover{background:var(--green);color:#fff}
+.btn-sm.red{background:var(--red-lt);color:var(--red)}
+.btn-sm.red:hover{background:var(--red);color:#fff}
+.btn-sm.amber{background:var(--amber-lt);color:var(--amber)}
+.btn-sm.amber:hover{background:var(--amber);color:#fff}
+.admin-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:.4rem}
+
+/* ── SHARE ── */
+.share-section{background:linear-gradient(135deg,var(--blue-pale) 0%,#fff 100%);border-radius:10px;padding:2rem;border:1px solid rgba(26,79,160,.1);margin-top:2rem}
+.share-section h3{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:1rem}
+.share-text{background:#fff;border:1px solid rgba(26,79,160,.12);border-radius:6px;padding:1rem 1.2rem;font-size:.85rem;line-height:1.7;color:var(--text);margin-bottom:1rem;white-space:pre-line}
+.share-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn-share{display:inline-flex;align-items:center;gap:.5rem;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:.65rem 1.2rem;border-radius:4px;border:none;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-share.whats{background:#25d366;color:#fff}
+.btn-share.whats:hover{background:#128c3a}
+.btn-share.copy{background:var(--blue);color:#fff}
+.btn-share.copy:hover{background:var(--blue-deep)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--blue-deep);color:#fff;border-radius:6px;padding:.75rem 1.5rem;font-size:.82rem;font-weight:700;z-index:2000;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── FOOTER ── */
+footer{background:var(--blue-deep);text-align:center;padding:2rem 1rem;color:rgba(255,255,255,.45);font-size:.78rem}
+footer strong{color:var(--gold-lt)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  .prizes{gap:.4rem}
+  .prize{padding:.9rem .4rem}
+  .prize-val{font-size:1.1rem}
+  .info-strip{grid-template-columns:repeat(2,1fr)}
+  .info-item:nth-child(2){border-right:none}
+  .info-item:nth-child(3){border-top:1px solid rgba(26,79,160,.07)}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .number-grid{grid-template-columns:repeat(auto-fill,minmax(44px,1fr))}
+  .admin-grid{grid-template-columns:1fr}
+  .pix-box{flex-direction:column;text-align:center}
+  .copy-pix{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- CONFIG BANNER -->
+<div class="config-banner" id="configBanner">
+  ⚙️ <strong>Configure o Supabase para ativar o banco de dados na nuvem.</strong>
+  Abra o arquivo HTML, localize as linhas <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> e cole suas chaves.
+  Veja o guia completo abaixo da página.
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-badge"><div class="pulse-dot"></div><span>Ação Solidária · Ao Vivo</span></div>
+  <h1>Ação Entre <em>Amigos</em></h1>
+  <p class="header-sub">Casa de Maria · Missão Filhos de Maria — Itajaí e Região</p>
+  <div class="prizes">
+    <div class="prize">
+      <p class="prize-place">1º Prêmio</p>
+      <span class="prize-emoji">🥇</span>
+      <div class="prize-val">R$ 1.000</div>
+      <div class="prize-label">no PIX</div>
+    </div>
+    <div class="prize">
+      <p class="prize-place">2º Prêmio</p>
+      <span class="prize-emoji">🥈</span>
+      <div class="prize-val">R$ 300</div>
+      <div class="prize-label">no PIX</div>
+    </div>
+    <div class="prize">
+      <p class="prize-place">3º Prêmio</p>
+      <span class="prize-emoji">🥉</span>
+      <div class="prize-val">R$ 200</div>
+      <div class="prize-label">no PIX</div>
+    </div>
+  </div>
+</header>
+
+<!-- INFO STRIP -->
+<div style="max-width:900px;margin:0 auto;padding:0 1rem">
+  <div class="info-strip">
+    <div class="info-item"><div class="info-item-label">Valor</div><div class="info-item-val">R$ 25</div><div class="info-item-sub">por número</div></div>
+    <div class="info-item"><div class="info-item-label">Sorteio</div><div class="info-item-val">10/08</div><div class="info-item-sub">ao vivo · Instagram</div></div>
+    <div class="info-item"><div class="info-item-label">Total</div><div class="info-item-val">500</div><div class="info-item-sub">números</div></div>
+    <div class="info-item"><div class="info-item-label">Pagamento</div><div class="info-item-val">PIX</div><div class="info-item-sub">apenas</div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HOW TO -->
+  <div class="how-to">
+    <h2>Como participar</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><p><strong>Escolha seu número</strong><br>clique na grade abaixo</p></div>
+      <div class="step"><div class="step-num">2</div><p><strong>Pague via PIX</strong><br>R$ 25 por número</p></div>
+      <div class="step"><div class="step-num">3</div><p><strong>Envie o comprovante</strong><br>pelo WhatsApp</p></div>
+      <div class="step"><div class="step-num">4</div><p><strong>Aguarde o sorteio</strong><br>10 de agosto ao vivo</p></div>
+    </div>
+  </div>
+
+  <!-- PIX -->
+  <div class="pix-box">
+    <div>
+      <div class="pix-label">🔑 Chave PIX — Colaborador</div>
+      <div class="pix-key">missaofilhosdemaria2026@gmail.com</div>
+      <div class="pix-sub">Após o pagamento, envie o comprovante via WhatsApp com seu nome e número</div>
+    </div>
+    <button class="copy-pix" onclick="copyText('missaofilhosdemaria2026@gmail.com','Chave PIX copiada! 🔑')">Copiar chave PIX</button>
+  </div>
+
+  <!-- COUNTERS -->
+  <div class="counters">
+    <div class="counter"><div class="counter-num c-free" id="cnt-free">—</div><div class="counter-label">Disponíveis</div></div>
+    <div class="counter"><div class="counter-num c-reserved" id="cnt-reserved">—</div><div class="counter-label">Reservados</div></div>
+    <div class="counter"><div class="counter-num c-paid" id="cnt-paid">—</div><div class="counter-label">Pagos ✓</div></div>
+    <div class="counter"><div class="counter-num c-value" id="cnt-value">—</div><div class="counter-label">Arrecadado</div></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span>Progresso da campanha</span>
+      <strong id="progress-pct">carregando…</strong>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- SYNC STATUS -->
+  <div class="sync-bar">
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncLabel">Conectando ao banco de dados…</span>
+    </div>
+    <button class="btn-refresh" onclick="loadData()">↻ Atualizar</button>
+  </div>
+
+  <!-- GRID HEADER -->
+  <div class="grid-header">
+    <h2>Escolha seu número</h2>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot free"></div>Disponível</div>
+      <div class="legend-item"><div class="legend-dot reserved"></div>Reservado</div>
+      <div class="legend-item"><div class="legend-dot paid"></div>Pago</div>
+    </div>
+  </div>
+
+  <!-- NUMBER GRID -->
+  <div class="number-grid" id="grid"></div>
+
+  <!-- ADMIN -->
+  <div class="admin-toggle">
+    <button class="btn-admin" onclick="document.getElementById('adminPanel').classList.toggle('open')">⚙️ Painel do Organizador</button>
+  </div>
+
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-title">⚙️ Painel do Organizador</div>
+    <p class="admin-subtitle">Atualizações aqui são salvas na nuvem e aparecem para todos em tempo real.</p>
+    <div class="admin-grid">
+      <div>
+        <div class="admin-label">Marcar como PAGO ✅</div>
+        <div class="admin-input-group">
+          <input class="admin-input" id="inputPaid" type="number" placeholder="Nº 1–500" min="1" max="500">
+          <input class="admin-input" id="inputPaidName" type="text" placeholder="Nome">
+          <button class="btn-sm green" onclick="adminSet('paid','inputPaid','inputPaidName')">Confirmar</button>
+        </div>
+      </div>
+      <div>
+        <div class="admin-label">Marcar como RESERVADO ⏳</div>
+        <div class="admin-input-group">
+          <input class="admin-input" id="inputReserved" type="number" placeholder="Nº 1–500" min="1" max="500">
+          <input class="admin-input" id="inputReservedName" type="text" placeholder="Nome">
+          <button class="btn-sm amber" onclick="adminSet('reserved','inputReserved','inputReservedName')">Reservar</button>
+        </div>
+      </div>
+      <div>
+        <div class="admin-label">Liberar número 🔓</div>
+        <div class="admin-input-group">
+          <input class="admin-input" id="inputFree" type="number" placeholder="Nº 1–500" min="1" max="500">
+          <button class="btn-sm red" onclick="adminSet('free','inputFree',null)">Liberar</button>
+        </div>
+      </div>
+      <div>
+        <div class="admin-label">Exportar lista de pagantes</div>
+        <button class="btn-sm green" style="width:100%;margin-top:.4rem" onclick="exportList()">📋 Baixar lista (.txt)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE -->
+  <div class="share-section">
+    <h3>📲 Texto de divulgação — copie e envie</h3>
+    <div class="share-text">💙 AÇÃO ENTRE AMIGOS — CASA DE MARIA 💙
+
+A Missão Filhos de Maria está realizando uma ação solidária para construir a Casa de Maria em Itajaí e Região — um lugar de acolhida, escuta e oração!
+
+🎟️ Apenas R$ 25 por número
+🥇 1º Prêmio: R$ 1.000 no PIX
+🥈 2º Prêmio: R$ 300 no PIX
+🥉 3º Prêmio: R$ 200 no PIX
+📅 Sorteio: 10 de agosto (ao vivo no Instagram)
+
+Como participar:
+1️⃣ Escolha seu número no link abaixo
+2️⃣ Pague via PIX: missaofilhosdemaria2026@gmail.com
+3️⃣ Envie o comprovante com seu nome e número pelo WhatsApp
+4️⃣ Torça e ajude a construir a Casa da Mãe! 🙏🏻
+
+"Aqui, aprendemos a amar mais, a confiar mais e a viver algo que vai além de nós mesmos."
+
+📲 Compartilhe com os amigos! Cada número é uma bênção! 💙
+@missao.filhosdemaria</div>
+    <div class="share-actions">
+      <button class="btn-share copy" onclick="copyShareText()">📋 Copiar texto</button>
+      <a class="btn-share whats" href="#" onclick="openWhats(event)">💬 Enviar no WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- SETUP GUIDE -->
+  <div style="background:#fff;border-radius:10px;padding:2rem;border:2px solid rgba(26,79,160,.1);margin-top:2rem" id="setupGuide">
+    <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;color:var(--blue);text-transform:uppercase;margin-bottom:1.2rem">
+      📋 Guia de Configuração — Supabase (faça uma vez só)
+    </h3>
+    <div style="font-size:.85rem;line-height:2;color:#334155">
+      <p><strong>Passo 1.</strong> Acesse <strong>supabase.com</strong> → clique em <em>"Start your project"</em> → crie uma conta grátis com o Google</p>
+      <p><strong>Passo 2.</strong> Clique em <em>"New Project"</em> → dê o nome <em>"rifa-casa-de-maria"</em> → escolha uma senha → clique em <em>"Create new project"</em></p>
+      <p><strong>Passo 3.</strong> Aguarde ~2 minutos o projeto ser criado</p>
+      <p><strong>Passo 4.</strong> No menu lateral, clique em <em>"SQL Editor"</em> → clique em <em>"New query"</em> → cole o código abaixo e clique em <em>"Run"</em>:</p>
+      <pre style="background:#0f172a;color:#e2e8f0;padding:1rem 1.2rem;border-radius:8px;font-size:.78rem;overflow-x:auto;margin:.75rem 0;line-height:1.6">-- Cria a tabela de números da rifa
+CREATE TABLE rifa_numeros (
+  numero      INTEGER PRIMARY KEY,
+  status      TEXT DEFAULT 'free',
+  nome        TEXT,
+  telefone    TEXT,
+  updated_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insere os 500 números
+INSERT INTO rifa_numeros (numero)
+SELECT generate_series(1, 500);
+
+-- Libera leitura pública (qualquer um vê os números)
+ALTER TABLE rifa_numeros ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "leitura_publica" ON rifa_numeros FOR SELECT USING (true);
+CREATE POLICY "escrita_publica" ON rifa_numeros FOR UPDATE USING (true);
+CREATE POLICY "insercao_publica" ON rifa_numeros FOR INSERT WITH CHECK (true);</pre>
+      <p><strong>Passo 5.</strong> No menu lateral, clique em <em>"Settings"</em> → <em>"API"</em></p>
+      <p><strong>Passo 6.</strong> Copie os dois valores:</p>
+      <ul style="margin:.5rem 0 .5rem 1.5rem">
+        <li><strong>Project URL</strong> → cole no lugar de <code style="background:#f1f5f9;padding:.1rem .4rem;border-radius:3px">COLE_SUA_URL_AQUI</code></li>
+        <li><strong>anon public</strong> (em "Project API Keys") → cole no lugar de <code style="background:#f1f5f9;padding:.1rem .4rem;border-radius:3px">COLE_SUA_ANON_KEY_AQUI</code></li>
+      </ul>
+      <p><strong>Passo 7.</strong> Salve o arquivo e suba no Vercel. Pronto — banco na nuvem funcionando! 🎉</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <strong>Missão Filhos de Maria</strong> · Itajaí, SC<br>
+  <span style="color:rgba(255,255,255,.3);font-size:.7rem">missaofilhosdemaria2026@gmail.com · @missao.filhosdemaria</span>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Reservar número</h3>
+      <p>Preencha seus dados e faça o PIX para confirmar</p>
+    </div>
+    <div class="modal-body">
+      <div class="modal-num-badge">🎟️ Número <span id="modal-num-display">---</span></div>
+      <div class="modal-val">
+        <span>Valor a pagar</span>
+        <strong>R$ 25,00</strong>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Seu nome completo</label>
+        <input class="form-input" id="buyer-name" type="text" placeholder="Ex: Maria da Silva">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp (para enviar comprovante)</label>
+        <input class="form-input" id="buyer-phone" type="tel" placeholder="(47) 99999-9999">
+      </div>
+      <div class="modal-pix">
+        <div class="modal-pix-label">🔑 Chave PIX</div>
+        <div class="modal-pix-key">missaofilhosdemaria2026@gmail.com</div>
+        <button class="copy-modal-pix" onclick="copyText('missaofilhosdemaria2026@gmail.com','PIX copiado! 🔑')">Copiar chave PIX</button>
+      </div>
+      <p class="modal-note">Após realizar o PIX, envie o comprovante com seu nome e número pelo WhatsApp. Seu número ficará reservado por <strong>24 horas</strong> aguardando confirmação do pagamento.</p>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="btn-reserve" id="btn-reserve-confirm" onclick="reserveNumber()">Reservar meu número 💙</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// SUPABASE INIT
+// ══════════════════════════════════════
+const isConfigured = SUPABASE_URL !== 'COLE_SUA_URL_AQUI' && SUPABASE_ANON_KEY !== 'COLE_SUA_ANON_KEY_AQUI';
+
+if (!isConfigured) {
+  document.getElementById('configBanner').classList.add('show');
+}
+
+let db = null;
+if (isConfigured) {
+  const { createClient } = supabase;
+  db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+const TOTAL = 500;
+let state = {}; // { numero: { status, nome, telefone } }
+let selectedNum = null;
+
+// ══════════════════════════════════════
+// LOAD DATA FROM SUPABASE
+// ══════════════════════════════════════
+async function loadData() {
+  setSyncStatus('syncing', 'Atualizando…');
+
+  if (!isConfigured) {
+    // Demo mode with localStorage
+    const saved = JSON.parse(localStorage.getItem('rifa_demo') || '{}');
+    for (let i = 1; i <= TOTAL; i++) {
+      state[i] = saved[i] || { status: 'free' };
+    }
+    buildGrid();
+    setSyncStatus('ok', 'Modo demo — configure o Supabase para sincronizar');
+    return;
+  }
+
+  try {
+    const { data, error } = await db.from('rifa_numeros').select('*').order('numero');
+    if (error) throw error;
+    state = {};
+    data.forEach(row => { state[row.numero] = { status: row.status, nome: row.nome, telefone: row.telefone }; });
+    // fill any missing
+    for (let i = 1; i <= TOTAL; i++) { if (!state[i]) state[i] = { status: 'free' }; }
+    buildGrid();
+    setSyncStatus('ok', `Sincronizado — ${new Date().toLocaleTimeString('pt-BR')}`);
+  } catch (err) {
+    console.error(err);
+    setSyncStatus('error', 'Erro de conexão. Verifique as chaves do Supabase.');
+    buildGridLoading();
+  }
+}
+
+// ══════════════════════════════════════
+// REALTIME SUBSCRIPTION
+// ══════════════════════════════════════
+function setupRealtime() {
+  if (!isConfigured || !db) return;
+  db.channel('rifa_realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'rifa_numeros' }, payload => {
+      const row = payload.new;
+      if (row && row.numero) {
+        state[row.numero] = { status: row.status, nome: row.nome, telefone: row.telefone };
+        buildGrid();
+        setSyncStatus('ok', `Atualizado em tempo real — ${new Date().toLocaleTimeString('pt-BR')}`);
+      }
+    })
+    .subscribe();
+}
+
+// ══════════════════════════════════════
+// UPSERT TO SUPABASE
+// ══════════════════════════════════════
+async function updateNumber(numero, status, nome = null, telefone = null) {
+  if (!isConfigured) {
+    state[numero] = { status, nome, telefone };
+    const saved = JSON.parse(localStorage.getItem('rifa_demo') || '{}');
+    saved[numero] = { status, nome, telefone };
+    localStorage.setItem('rifa_demo', JSON.stringify(saved));
+    buildGrid();
+    return true;
+  }
+  try {
+    const { error } = await db.from('rifa_numeros').update({
+      status,
+      nome: nome || null,
+      telefone: telefone || null,
+      updated_at: new Date().toISOString()
+    }).eq('numero', numero);
+    if (error) throw error;
+    return true;
+  } catch (err) {
+    console.error(err);
+    showToast('Erro ao salvar. Tente novamente.');
+    return false;
+  }
+}
+
+// ══════════════════════════════════════
+// BUILD GRID
+// ══════════════════════════════════════
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  let free = 0, reserved = 0, paid = 0;
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const s = state[i] || { status: 'free' };
+    const btn = document.createElement('button');
+    btn.className = `num-btn ${s.status}`;
+    btn.textContent = String(i).padStart(3, '0');
+    btn.dataset.num = i;
+    if (s.status === 'free') btn.onclick = () => openModal(i);
+    if (s.nome) btn.title = s.nome;
+    grid.appendChild(btn);
+    if (s.status === 'free') free++;
+    else if (s.status === 'reserved') reserved++;
+    else if (s.status === 'paid') paid++;
+  }
+
+  document.getElementById('cnt-free').textContent = free;
+  document.getElementById('cnt-reserved').textContent = reserved;
+  document.getElementById('cnt-paid').textContent = paid;
+  document.getElementById('cnt-value').textContent = `R$ ${(paid * 25).toLocaleString('pt-BR')}`;
+  const sold = reserved + paid;
+  const pct = Math.round((sold / TOTAL) * 100);
+  document.getElementById('progress-pct').textContent = `${pct}% vendidos`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function buildGridLoading() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= TOTAL; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn loading-grid';
+    btn.textContent = String(i).padStart(3, '0');
+    btn.disabled = true;
+    grid.appendChild(btn);
+  }
+}
+
+// ══════════════════════════════════════
+// SYNC STATUS
+// ══════════════════════════════════════
+function setSyncStatus(type, label) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot' + (type === 'syncing' ? ' syncing' : type === 'error' ? ' error' : '');
+  document.getElementById('syncLabel').textContent = label;
+}
+
+// ══════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════
+function openModal(num) {
+  if ((state[num] || {}).status !== 'free') { showToast('Este número já foi reservado!'); return; }
+  selectedNum = num;
+  document.getElementById('modal-num-display').textContent = String(num).padStart(3, '0');
+  document.getElementById('buyer-name').value = '';
+  document.getElementById('buyer-phone').value = '';
+  document.getElementById('btn-reserve-confirm').disabled = false;
+  document.getElementById('btn-reserve-confirm').textContent = 'Reservar meu número 💙';
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  selectedNum = null;
+}
+
+async function reserveNumber() {
+  const name = document.getElementById('buyer-name').value.trim();
+  const phone = document.getElementById('buyer-phone').value.trim();
+  if (!name) { showToast('Por favor, informe seu nome 😊'); return; }
+  if (!selectedNum) return;
+
+  const btn = document.getElementById('btn-reserve-confirm');
+  btn.disabled = true;
+  btn.textContent = 'Salvando…';
+
+  const ok = await updateNumber(selectedNum, 'reserved', name, phone);
+  if (ok) {
+    closeModal();
+    buildGrid();
+    showToast(`Número ${String(selectedNum).padStart(3,'0')} reservado! Envie o PIX 💙`);
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'Reservar meu número 💙';
+  }
+}
+
+// ══════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════
+async function adminSet(status, numInputId, nameInputId) {
+  const val = parseInt(document.getElementById(numInputId).value);
+  if (!val || val < 1 || val > TOTAL) { showToast('Número inválido'); return; }
+  const name = nameInputId ? document.getElementById(nameInputId).value.trim() : null;
+  const ok = await updateNumber(val, status, name || state[val]?.nome);
+  if (ok) {
+    document.getElementById(numInputId).value = '';
+    if (nameInputId) document.getElementById(nameInputId).value = '';
+    buildGrid();
+    const labels = { paid: `Nº ${String(val).padStart(3,'0')} marcado como PAGO ✅`, reserved: `Nº ${String(val).padStart(3,'0')} reservado ⏳`, free: `Nº ${String(val).padStart(3,'0')} liberado 🔓` };
+    showToast(labels[status]);
+  }
+}
+
+async function exportList() {
+  let txt = 'RIFA CASA DE MARIA — LISTA DE PAGANTES\n';
+  txt += '='.repeat(50) + '\n\n';
+  let count = 0;
+  for (let i = 1; i <= TOTAL; i++) {
+    if (state[i] && state[i].status === 'paid') {
+      txt += `Nº ${String(i).padStart(3,'0')} | ${state[i].nome || '—'} | ${state[i].telefone || '—'}\n`;
+      count++;
+    }
+  }
+  txt += `\nTotal pagos: ${count} | Total arrecadado: R$ ${(count * 25).toLocaleString('pt-BR')}`;
+  txt += `\nGerado em: ${new Date().toLocaleString('pt-BR')}`;
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'rifa-pagantes.txt';
+  a.click();
+}
+
+// ══════════════════════════════════════
+// SHARE
+// ══════════════════════════════════════
+function copyShareText() {
+  const text = document.querySelector('.share-text').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Texto copiado! Cole no WhatsApp 💬'));
+}
+
+function openWhats(e) {
+  e.preventDefault();
+  const text = encodeURIComponent(document.querySelector('.share-text').textContent);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function copyText(text, msg) {
+  navigator.clipboard.writeText(text).then(() => showToast(msg || 'Copiado!'));
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+// Auto-refresh a cada 30s
+setInterval(loadData, 30000);
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+buildGridLoading();
+loadData();
+setupRealtime();
+</script>
+</body>
+</html>
