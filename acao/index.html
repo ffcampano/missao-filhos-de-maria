@@ -6,9 +6,14 @@
 <title>Ação Entre Amigos — Casa de Maria 💙</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
 
+<!-- ════════════════════════════════════════════════════
+     ⚙️  CONFIGURAÇÃO SUPABASE
+     Substitua os dois valores abaixo pelas suas chaves
+     Você encontra em: Supabase → Settings → API
+     ════════════════════════════════════════════════════ -->
 <script>
-  const SUPABASE_URL = 'https://yoordwbcrsljjaspvzxx.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3Jkd2JjcnNsamphc3B2enh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NTQ0MzcsImV4cCI6MjA5OTAzMDQzN30.H7E6IX6j2PmlN17pSzOyNxmAolgd7gv6-rV5th3Kj1s4';
+  const SUPABASE_URL = 'https://yoordwbcrsljjaspvzxx.supabase.co';         
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3Jkd2JjcnNsamphc3B2enh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NTQ0MzcsImV4cCI6MjA5OTAzMDQzN30.H7E6IX6j2PmlN17pSzOyNxmAolgd7gv6-rV5th3Kj1s'; 
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -245,6 +250,13 @@ footer strong{color:var(--gold-lt)}
 </head>
 <body>
 
+<!-- CONFIG BANNER -->
+<div class="config-banner" id="configBanner">
+  ⚙️ <strong>Configure o Supabase para ativar o banco de dados na nuvem.</strong>
+  Abra o arquivo HTML, localize as linhas <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> e cole suas chaves.
+  Veja o guia completo abaixo da página.
+</div>
+
 <!-- HEADER -->
 <header>
   <div class="header-badge"><div class="pulse-dot"></div><span>Ação Solidária · Ao Vivo</span></div>
@@ -405,27 +417,23 @@ footer strong{color:var(--gold-lt)}
 
 <script>
 // ══════════════════════════════════════
+// STATE — declarado primeiro para evitar erros de ordem
+// ══════════════════════════════════════
+const TOTAL = 500;
+const PIX_KEY = '67.108.595/0001-74';
+let state = {};
+let selectedNums = new Set();
+
+// ══════════════════════════════════════
 // SUPABASE INIT
 // ══════════════════════════════════════
-const isConfigured = SUPABASE_URL !== 'https://yoordwbcrsljjaspvzxx.supabase.co' && SUPABASE_ANON_KEY !== 'sb_publishable_rEDF7-akGi1M6bwyLXjsqQ_c8FiDLG4';
-
-if (!isConfigured) {
-  document.getElementById('configBanner').classList.add('show');
-}
+const isConfigured = SUPABASE_URL !== 'COLE_SUA_URL_AQUI' && SUPABASE_ANON_KEY !== 'COLE_SUA_ANON_KEY_AQUI';
 
 let db = null;
 if (isConfigured) {
   const { createClient } = supabase;
   db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
-
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-const TOTAL = 500;
-const PIX_KEY = '67.108.595/0001-74';
-let state = {}; // { numero: { status, nome, telefone } }
-let selectedNums = new Set(); // múltiplos números selecionados
 
 // ══════════════════════════════════════
 // LOAD DATA FROM SUPABASE
