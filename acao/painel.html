@@ -520,17 +520,41 @@ function setupRealtime() {
 
 // ══ UPDATE ══
 async function updateNumber(numero, status, nome = null, telefone = null) {
+  setSyncStatus('syncing', 'Salvando…');
   try {
-    const { error } = await db.from('rifa_numeros').update({
-      status, nome: nome || null, telefone: telefone || null,
-      updated_at: new Date().toISOString()
-    }).eq('numero', numero);
-    if (error) throw error;
-    state[numero] = { status, nome, telefone };
+    // Usa upsert para garantir que o registro seja criado ou atualizado
+    const { data, error } = await db
+      .from('rifa_numeros')
+      .upsert({
+        numero,
+        status,
+        nome: nome || null,
+        telefone: telefone || null,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'numero' })
+      .select();
+
+    if (error) {
+      console.error('Supabase error:', error);
+      showToast(`❌ Erro: ${error.message}`);
+      setSyncStatus('error', `Erro: ${error.message}`);
+      return false;
+    }
+
+    // Confirma que o dado foi salvo
+    if (!data || data.length === 0) {
+      showToast('❌ Nenhuma linha atualizada — verifique as políticas RLS no Supabase.');
+      setSyncStatus('error', 'RLS bloqueou a escrita. Veja o console.');
+      return false;
+    }
+
+    state[numero] = { status, nome: nome || null, telefone: telefone || null };
+    setSyncStatus('ok', `Salvo — ${new Date().toLocaleTimeString('pt-BR')}`);
     return true;
   } catch(e) {
-    console.error(e);
-    showToast('Erro ao salvar. Tente novamente.');
+    console.error('Exceção:', e);
+    showToast(`❌ Erro inesperado: ${e.message}`);
+    setSyncStatus('error', 'Erro inesperado.');
     return false;
   }
 }
