@@ -7,13 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700;900&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
 
 <!-- ════════════════════════════════════════════════════
-     ⚙️  CONFIGURAÇÃO SUPABASE
-     Substitua os dois valores abaixo pelas suas chaves
-     Você encontra em: Supabase → Settings → API
+     ⚙️  CONFIGURAÇÃO SUPABASE — suas chaves já estão aqui
      ════════════════════════════════════════════════════ -->
 <script>
-  const SUPABASE_URL = 'https://yoordwbcrsljjaspvzxx.supabase.co';         
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3Jkd2JjcnNsamphc3B2enh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NTQ0MzcsImV4cCI6MjA5OTAzMDQzN30.H7E6IX6j2PmlN17pSzOyNxmAolgd7gv6-rV5th3Kj1s'; 
+  const SUPABASE_URL      = 'https://yoordwbcrsljjaspvzxx.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb3Jkd2JjcnNsamphc3B2enh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NTQ0MzcsImV4cCI6MjA5OTAzMDQzN30.H7E6IX6j2PmlN17pSzOyNxmAolgd7gv6-rV5th3Kj1s';
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -250,12 +248,6 @@ footer strong{color:var(--gold-lt)}
 </head>
 <body>
 
-<!-- CONFIG BANNER -->
-<div class="config-banner" id="configBanner">
-  ⚙️ <strong>Configure o Supabase para ativar o banco de dados na nuvem.</strong>
-  Abra o arquivo HTML, localize as linhas <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> e cole suas chaves.
-  Veja o guia completo abaixo da página.
-</div>
 
 <!-- HEADER -->
 <header>
@@ -312,10 +304,10 @@ footer strong{color:var(--gold-lt)}
   <div class="pix-box">
     <div>
       <div class="pix-label">🔑 Chave PIX — Colaborador</div>
-      <div class="pix-key">67.108.595/0001-74</div>
+      <div class="pix-key">67108595000174</div>
       <div class="pix-sub">Após o pagamento, envie o comprovante via WhatsApp com seu nome e número</div>
     </div>
-    <button class="copy-pix" onclick="copyText('67.108.595/0001-74','Chave PIX copiada! 🔑')">Copiar chave PIX</button>
+    <button class="copy-pix" onclick="copyText('67108595000174','Chave PIX copiada! 🔑')">Copiar chave PIX</button>
   </div>
 
   <!-- COUNTERS -->
@@ -400,8 +392,8 @@ footer strong{color:var(--gold-lt)}
       </div>
       <div class="modal-pix">
         <div class="modal-pix-label">🔑 Chave PIX</div>
-        <div class="modal-pix-key">67.108.595/0001-74</div>
-        <button class="copy-modal-pix" onclick="copyText('67.108.595/0001-74','PIX copiado! 🔑')">Copiar chave PIX</button>
+        <div class="modal-pix-key">67108595000174</div>
+        <button class="copy-modal-pix" onclick="copyText('67108595000174','PIX copiado! 🔑')">Copiar chave PIX</button>
       </div>
       <p class="modal-note">Após realizar o PIX, envie o comprovante com seu nome e número pelo WhatsApp. Seu número ficará reservado por <strong>24 horas</strong> aguardando confirmação do pagamento.</p>
       <div class="modal-footer">
@@ -420,50 +412,36 @@ footer strong{color:var(--gold-lt)}
 // STATE — declarado primeiro para evitar erros de ordem
 // ══════════════════════════════════════
 const TOTAL = 500;
-const PIX_KEY = '67.108.595/0001-74';
+const PIX_KEY = '67108595000174';
 let state = {};
 let selectedNums = new Set();
 
 // ══════════════════════════════════════
-// SUPABASE INIT
+// SUPABASE INIT — conexão direta
 // ══════════════════════════════════════
-const isConfigured = SUPABASE_URL !== 'COLE_SUA_URL_AQUI' && SUPABASE_ANON_KEY !== 'COLE_SUA_ANON_KEY_AQUI';
-
-let db = null;
-if (isConfigured) {
-  const { createClient } = supabase;
-  db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ══════════════════════════════════════
 // LOAD DATA FROM SUPABASE
 // ══════════════════════════════════════
 async function loadData() {
   setSyncStatus('syncing', 'Atualizando…');
-
-  if (!isConfigured) {
-    // Demo mode with localStorage
-    const saved = JSON.parse(localStorage.getItem('rifa_demo') || '{}');
-    for (let i = 1; i <= TOTAL; i++) {
-      state[i] = saved[i] || { status: 'free' };
-    }
-    buildGrid();
-    setSyncStatus('ok', 'Modo demo — configure o Supabase para sincronizar');
-    return;
-  }
-
   try {
     const { data, error } = await db.from('rifa_numeros').select('*').order('numero');
     if (error) throw error;
     state = {};
-    data.forEach(row => { state[row.numero] = { status: row.status, nome: row.nome, telefone: row.telefone }; });
-    // fill any missing
-    for (let i = 1; i <= TOTAL; i++) { if (!state[i]) state[i] = { status: 'free' }; }
+    data.forEach(row => {
+      state[row.numero] = { status: row.status, nome: row.nome, telefone: row.telefone };
+    });
+    for (let i = 1; i <= TOTAL; i++) {
+      if (!state[i]) state[i] = { status: 'free' };
+    }
     buildGrid();
     setSyncStatus('ok', `Sincronizado — ${new Date().toLocaleTimeString('pt-BR')}`);
   } catch (err) {
-    console.error(err);
-    setSyncStatus('error', 'Erro de conexão. Verifique as chaves do Supabase.');
+    console.error('Erro ao carregar:', err);
+    setSyncStatus('error', `Erro: ${err.message || 'verifique o console (F12)'}`);
     buildGridLoading();
   }
 }
@@ -472,14 +450,13 @@ async function loadData() {
 // REALTIME SUBSCRIPTION
 // ══════════════════════════════════════
 function setupRealtime() {
-  if (!isConfigured || !db) return;
   db.channel('rifa_realtime')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'rifa_numeros' }, payload => {
       const row = payload.new;
       if (row && row.numero) {
         state[row.numero] = { status: row.status, nome: row.nome, telefone: row.telefone };
         buildGrid();
-        setSyncStatus('ok', `Atualizado em tempo real — ${new Date().toLocaleTimeString('pt-BR')}`);
+        setSyncStatus('ok', `Atualizado — ${new Date().toLocaleTimeString('pt-BR')}`);
       }
     })
     .subscribe();
@@ -489,14 +466,6 @@ function setupRealtime() {
 // UPSERT TO SUPABASE
 // ══════════════════════════════════════
 async function updateNumber(numero, status, nome = null, telefone = null) {
-  if (!isConfigured) {
-    state[numero] = { status, nome, telefone };
-    const saved = JSON.parse(localStorage.getItem('rifa_demo') || '{}');
-    saved[numero] = { status, nome, telefone };
-    localStorage.setItem('rifa_demo', JSON.stringify(saved));
-    buildGrid();
-    return true;
-  }
   try {
     const { data, error } = await db
       .from('rifa_numeros')
@@ -511,18 +480,18 @@ async function updateNumber(numero, status, nome = null, telefone = null) {
 
     if (error) {
       console.error('Supabase error:', error);
-      showToast('Erro ao salvar. Verifique a conexão.');
+      showToast(`❌ Erro: ${error.message}`);
       return false;
     }
     if (!data || data.length === 0) {
-      showToast('Não foi possível salvar. Verifique as políticas RLS.');
+      showToast('❌ Não foi possível salvar. Verifique as políticas RLS no Supabase.');
       return false;
     }
     state[numero] = { status, nome: nome || null, telefone: telefone || null };
     return true;
   } catch (err) {
-    console.error(err);
-    showToast('Erro inesperado. Tente novamente.');
+    console.error('Exceção:', err);
+    showToast(`❌ Erro inesperado: ${err.message}`);
     return false;
   }
 }
