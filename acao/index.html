@@ -12,7 +12,7 @@
      Você encontra em: Supabase → Settings → API
      ════════════════════════════════════════════════════ -->
 <script>
-  const SUPABASE_URL = 'https://yoordwbcrsljjaspvzxx.supabase.co';
+  const SUPABASE_URL = 'https://yoordwbcrsljjaspvzxx.supabase.co'; 
   const SUPABASE_ANON_KEY = 'sb_publishable_rEDF7-akGi1M6bwyLXjsqQ_c8FiDLG4';
 </script>
 
@@ -419,7 +419,7 @@ footer strong{color:var(--gold-lt)}
 // ══════════════════════════════════════
 // SUPABASE INIT
 // ══════════════════════════════════════
-const isConfigured = SUPABASE_URL !== 'COLE_SUA_URL_AQUI' && SUPABASE_ANON_KEY !== 'COLE_SUA_ANON_KEY_AQUI';
+const isConfigured = SUPABASE_URL !== 'https://yoordwbcrsljjaspvzxx.supabase.co' && SUPABASE_ANON_KEY !== 'sb_publishable_rEDF7-akGi1M6bwyLXjsqQ_c8FiDLG4';
 
 if (!isConfigured) {
   document.getElementById('configBanner').classList.add('show');
@@ -502,17 +502,31 @@ async function updateNumber(numero, status, nome = null, telefone = null) {
     return true;
   }
   try {
-    const { error } = await db.from('rifa_numeros').update({
-      status,
-      nome: nome || null,
-      telefone: telefone || null,
-      updated_at: new Date().toISOString()
-    }).eq('numero', numero);
-    if (error) throw error;
+    const { data, error } = await db
+      .from('rifa_numeros')
+      .upsert({
+        numero,
+        status,
+        nome: nome || null,
+        telefone: telefone || null,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'numero' })
+      .select();
+
+    if (error) {
+      console.error('Supabase error:', error);
+      showToast('Erro ao salvar. Verifique a conexão.');
+      return false;
+    }
+    if (!data || data.length === 0) {
+      showToast('Não foi possível salvar. Verifique as políticas RLS.');
+      return false;
+    }
+    state[numero] = { status, nome: nome || null, telefone: telefone || null };
     return true;
   } catch (err) {
     console.error(err);
-    showToast('Erro ao salvar. Tente novamente.');
+    showToast('Erro inesperado. Tente novamente.');
     return false;
   }
 }
