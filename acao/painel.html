@@ -481,6 +481,7 @@ if (sessionStorage.getItem('admin_auth') === '1') {
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ══ STATE — declarado antes de qualquer função que o use ══
 const TOTAL = 500;
 let state = {};
 let currentFilter = 'all';
