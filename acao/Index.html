@@ -410,28 +410,78 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ══════════════════════════════════════
+// DIAGNÓSTICO VISUAL — mostra erro na tela sem precisar do F12
+// ══════════════════════════════════════
+function showDiag(msg, isError = true) {
+  let box = document.getElementById('diagBox');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'diagBox';
+    box.style.cssText = `
+      position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+      background:${isError ? '#fee2e2' : '#dcfce7'};
+      border:2px solid ${isError ? '#dc2626' : '#16a34a'};
+      color:${isError ? '#7f1d1d' : '#14532d'};
+      border-radius:8px;padding:1rem 1.5rem;
+      font-family:monospace;font-size:.75rem;line-height:1.6;
+      max-width:90vw;word-break:break-all;z-index:9999;
+      box-shadow:0 8px 30px rgba(0,0,0,.15);
+    `;
+    document.body.appendChild(box);
+  }
+  box.style.background = isError ? '#fee2e2' : '#dcfce7';
+  box.style.borderColor = isError ? '#dc2626' : '#16a34a';
+  box.style.color = isError ? '#7f1d1d' : '#14532d';
+  box.innerHTML = msg;
+}
+
+// ══════════════════════════════════════
 // LOAD DATA FROM SUPABASE
 // ══════════════════════════════════════
 async function loadData() {
-  setSyncStatus('syncing', 'Atualizando…');
+  setSyncStatus('syncing', 'Conectando…');
   try {
+    // Teste 1: verifica se o SDK foi carregado
+    if (typeof supabase === 'undefined') {
+      showDiag('❌ SDK Supabase não carregou.<br>Verifique a conexão com a internet.');
+      setSyncStatus('error', 'SDK não carregou');
+      return;
+    }
+
+    // Teste 2: verifica as chaves
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      showDiag('❌ Chaves do Supabase não definidas.');
+      setSyncStatus('error', 'Chaves ausentes');
+      return;
+    }
+
+    showDiag(`🔄 Tentando conectar em:<br>${SUPABASE_URL}<br><br>Chave: ${SUPABASE_ANON_KEY.substring(0,30)}...`, false);
+
     const { data, error } = await db
       .from('rifa_numeros')
       .select('numero, status, nome, telefone')
       .order('numero');
 
     if (error) {
-      console.error('Supabase error:', JSON.stringify(error));
-      setSyncStatus('error', `Erro ${error.code}: ${error.message}`);
+      showDiag(`❌ Erro do Supabase:<br><b>Código:</b> ${error.code || 'sem código'}<br><b>Mensagem:</b> ${error.message}<br><b>Detalhes:</b> ${error.details || '—'}<br><b>Hint:</b> ${error.hint || '—'}`);
+      setSyncStatus('error', `Erro: ${error.message}`);
       buildGridLoading();
       return;
     }
 
     if (!data || data.length === 0) {
-      setSyncStatus('error', 'Tabela vazia ou sem permissão de leitura (RLS)');
+      showDiag('⚠️ Conexão OK mas tabela vazia.<br>Verifique se a tabela rifa_numeros tem dados e se o RLS está correto.');
+      setSyncStatus('error', 'Tabela vazia');
       buildGridLoading();
       return;
     }
+
+    // Sucesso!
+    showDiag(`✅ Conectado! ${data.length} números carregados.`, false);
+    setTimeout(() => {
+      const box = document.getElementById('diagBox');
+      if (box) box.remove();
+    }, 4000);
 
     state = {};
     data.forEach(row => {
@@ -441,9 +491,10 @@ async function loadData() {
       if (!state[i]) state[i] = { status: 'free' };
     }
     buildGrid();
-    setSyncStatus('ok', `Sincronizado — ${new Date().toLocaleTimeString('pt-BR')} (${data.length} números)`);
+    setSyncStatus('ok', `Sincronizado — ${new Date().toLocaleTimeString('pt-BR')}`);
+
   } catch (err) {
-    console.error('Exceção:', err);
+    showDiag(`❌ Exceção JavaScript:<br><b>${err.name}:</b> ${err.message}<br><br>Isso pode indicar bloqueio de CORS ou falha de rede.`);
     setSyncStatus('error', `Exceção: ${err.message}`);
     buildGridLoading();
   }
