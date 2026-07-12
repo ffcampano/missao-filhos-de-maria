@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin — Ação Entre Amigos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Lato:wght@300;400;700;900&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+
+<!-- ════════════════════════════════════════════
+     ⚙️  CONFIGURAÇÃO — preencha os 3 valores
+     ════════════════════════════════════════════ -->
+<script>
+  const SUPABASE_URL     = 'https://yoordwbcrsljjaspvzxx.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_rEDF7-akGi1M6bwyLXjsqQ_c8FiDLG4';
+  const ADMIN_PASSWORD   = 'Miss@@@o2026';
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --blue:      #1a4fa0;
+  --blue-deep: #0f2f6b;
+  --blue-pale: #edf4ff;
+  --gold:      #c9a84c;
+  --gold-lt:   #e8c96e;
+  --green:     #16a34a;
+  --green-lt:  #dcfce7;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --red:       #dc2626;
+  --red-lt:    #fee2e2;
+  --gray:      #64748b;
+  --text:      #0d1f3c;
+  --white:     #ffffff;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Lato',sans-serif;background:#f0f4ff;color:var(--text);min-height:100vh}
+
+/* ── LOGIN SCREEN ── */
+.login-screen {
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 100%);
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
+}
+.login-card {
+  background:var(--white);border-radius:16px;padding:3rem 2.5rem;
+  max-width:400px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  text-align:center;
+}
+.login-icon {
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-deep) 100%);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;
+  box-shadow:0 8px 24px rgba(26,79,160,0.3);
+  font-size:2rem;
+}
+.login-title {
+  font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:.4rem;
+}
+.login-sub {
+  font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;
+  color:var(--text);margin-bottom:2rem;
+}
+.login-input {
+  width:100%;background:var(--blue-pale);border:1.5px solid rgba(26,79,160,0.15);
+  border-radius:8px;padding:.9rem 1.2rem;font-size:1rem;font-family:'Lato',sans-serif;
+  color:var(--text);outline:none;text-align:center;letter-spacing:.15em;
+  margin-bottom:1rem;transition:border-color .2s;
+}
+.login-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,79,160,0.1)}
+.login-btn {
+  width:100%;padding:.9rem;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-deep) 100%);
+  border:none;border-radius:8px;color:var(--white);
+  font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  font-weight:700;cursor:pointer;transition:all .25s;
+  box-shadow:0 4px 15px rgba(26,79,160,0.3);
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(26,79,160,0.4)}
+.login-error {
+  background:var(--red-lt);border:1px solid rgba(220,38,38,0.3);
+  border-radius:6px;padding:.75rem;margin-top:.75rem;
+  font-size:.82rem;color:var(--red);display:none;
+}
+.login-error.show{display:block}
+
+/* ── ADMIN PANEL ── */
+.admin-screen { display:none; }
+.admin-screen.show { display:block; }
+
+/* Header */
+.admin-header {
+  background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 100%);
+  padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+  box-shadow:0 4px 20px rgba(26,79,160,0.2);
+}
+.admin-header-left h1 {
+  font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;
+  font-style:italic;color:var(--white);margin-bottom:.2rem;
+}
+.admin-header-left p {
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.2em;
+  color:rgba(255,255,255,0.55);text-transform:uppercase;
+}
+.admin-header-right { display:flex;gap:.75rem;align-items:center; }
+.btn-logout {
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:600;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);padding:.55rem 1rem;border-radius:4px;
+  cursor:pointer;transition:all .2s;
+}
+.btn-logout:hover{background:rgba(255,255,255,0.2);color:var(--white)}
+.btn-view-public {
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:700;color:var(--blue-deep);background:var(--gold-lt);
+  border:none;padding:.55rem 1rem;border-radius:4px;cursor:pointer;transition:all .2s;
+  text-decoration:none;display:inline-block;
+}
+.btn-view-public:hover{background:var(--white)}
+
+/* Main layout */
+.admin-main { max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem; }
+
+/* Stats row */
+.stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem; }
+.stat-card {
+  background:var(--white);border-radius:10px;padding:1.2rem 1rem;text-align:center;
+  border:1px solid rgba(26,79,160,0.08);box-shadow:0 2px 10px rgba(26,79,160,0.05);
+}
+.stat-num { font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1; }
+.stat-num.s-free{color:var(--blue)}
+.stat-num.s-reserved{color:var(--amber)}
+.stat-num.s-paid{color:var(--green)}
+.stat-num.s-value{color:var(--blue)}
+.stat-label { font-size:.62rem;color:var(--gray);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem; }
+
+/* Progress */
+.progress-wrap {
+  background:var(--white);border-radius:10px;padding:1.2rem 1.5rem;
+  margin-bottom:2rem;border:1px solid rgba(26,79,160,0.08);
+  box-shadow:0 2px 10px rgba(26,79,160,0.05);
+}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.progress-top span{font-size:.75rem;color:var(--gray)}
+.progress-top strong{font-family:'Playfair Display',serif;color:var(--blue)}
+.progress-bar{height:10px;background:var(--blue-pale);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:100px;transition:width .5s ease}
+
+/* Action panels */
+.action-grid { display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem; }
+.action-card {
+  background:var(--white);border-radius:10px;padding:1.5rem;
+  border:1px solid rgba(26,79,160,0.08);box-shadow:0 2px 10px rgba(26,79,160,0.05);
+}
+.action-card-title {
+  font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid rgba(26,79,160,0.08);
+  display:flex;align-items:center;gap:.5rem;
+}
+.action-card-title.green{color:var(--green)}
+.action-card-title.amber{color:var(--amber)}
+.action-card-title.red{color:var(--red)}
+.action-card-title.blue{color:var(--blue)}
+
+.input-row { display:flex;gap:.5rem;margin-bottom:.75rem; }
+.a-input {
+  flex:1;background:var(--blue-pale);border:1.5px solid rgba(26,79,160,0.15);
+  border-radius:6px;padding:.65rem .9rem;font-size:.88rem;
+  font-family:'Lato',sans-serif;color:var(--text);outline:none;transition:border-color .2s;
+}
+.a-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,79,160,0.08)}
+.a-label { font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:.4rem; }
+.btn-action {
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:700;border:none;padding:.65rem 1.1rem;border-radius:6px;cursor:pointer;
+  white-space:nowrap;transition:all .2s;flex-shrink:0;
+}
+.btn-action.green{background:var(--green-lt);color:var(--green)}
+.btn-action.green:hover{background:var(--green);color:var(--white)}
+.btn-action.amber{background:var(--amber-lt);color:var(--amber)}
+.btn-action.amber:hover{background:var(--amber);color:var(--white)}
+.btn-action.red{background:var(--red-lt);color:var(--red)}
+.btn-action.red:hover{background:var(--red);color:var(--white)}
+.btn-action.blue{background:var(--blue-pale);color:var(--blue)}
+.btn-action.blue:hover{background:var(--blue);color:var(--white)}
+
+/* Sync bar */
+.sync-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.5rem}
+.sync-status{display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gray)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+.sync-dot.syncing{background:var(--amber)}
+.sync-dot.error{background:var(--red);animation:none}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.btn-refresh{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:var(--blue-pale);border:1px solid rgba(26,79,160,0.2);padding:.4rem .8rem;border-radius:4px;cursor:pointer;font-weight:600;transition:all .2s}
+.btn-refresh:hover{background:var(--blue);color:var(--white)}
+
+/* Number grid */
+.grid-section {
+  background:var(--white);border-radius:10px;padding:1.5rem;
+  border:1px solid rgba(26,79,160,0.08);box-shadow:0 2px 10px rgba(26,79,160,0.05);
+  margin-bottom:2rem;
+}
+.grid-header-row {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1rem;flex-wrap:wrap;gap:.75rem;
+}
+.grid-header-row h2{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+.legend{display:flex;gap:1rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--gray)}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.legend-dot.free{background:var(--blue-pale);border:1px solid rgba(26,79,160,.2)}
+.legend-dot.reserved{background:var(--amber-lt);border:1px solid var(--amber)}
+.legend-dot.paid{background:var(--green-lt);border:1px solid var(--green)}
+
+/* Filter */
+.filter-row { display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap; }
+.filter-btn {
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:600;border:1.5px solid rgba(26,79,160,0.15);background:var(--white);
+  color:var(--gray);padding:.4rem .9rem;border-radius:20px;cursor:pointer;transition:all .2s;
+}
+.filter-btn.active-all{background:var(--blue);color:var(--white);border-color:var(--blue)}
+.filter-btn.active-free{background:var(--blue-pale);color:var(--blue);border-color:var(--blue)}
+.filter-btn.active-reserved{background:var(--amber-lt);color:var(--amber);border-color:var(--amber)}
+.filter-btn.active-paid{background:var(--green-lt);color:var(--green);border-color:var(--green)}
+
+.number-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:5px}
+.num-btn{
+  aspect-ratio:1;border-radius:6px;border:none;cursor:pointer;
+  font-size:.78rem;font-weight:700;font-family:'Lato',sans-serif;
+  transition:all .18s ease;display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.num-btn.free{background:var(--blue-pale);color:var(--blue);border:1.5px solid rgba(26,79,160,.15)}
+.num-btn.free:hover{background:var(--blue);color:var(--white);transform:scale(1.08)}
+.num-btn.reserved{background:var(--amber-lt);color:var(--amber);border:1.5px solid rgba(217,119,6,.3)}
+.num-btn.reserved:hover{background:var(--amber);color:var(--white);transform:scale(1.08)}
+.num-btn.paid{background:var(--green-lt);color:var(--green);border:1.5px solid rgba(22,163,74,.3)}
+.num-btn.paid:hover{background:var(--green);color:var(--white);transform:scale(1.08)}
+.num-btn.loading-grid{background:#f1f5f9;color:#cbd5e1;border:1.5px solid #e2e8f0;cursor:default;animation:shimmer 1.5s ease-in-out infinite}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* Detail modal */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
+.detail-overlay.open{opacity:1;pointer-events:all}
+.detail-modal{background:var(--white);border-radius:12px;max-width:420px;width:100%;overflow:hidden;transform:translateY(20px);transition:transform .25s;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.detail-overlay.open .detail-modal{transform:none}
+.detail-header{padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.detail-header h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text)}
+.detail-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--gray);padding:.2rem}
+.detail-body{padding:0 1.5rem 1.5rem}
+.detail-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--blue);line-height:1;margin-bottom.5rem}
+.detail-info{margin:1rem 0}
+.detail-info p{font-size:.88rem;color:var(--gray);margin-bottom:.3rem}
+.detail-info strong{color:var(--text)}
+.detail-status{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .8rem;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:1rem}
+.detail-status.free{background:var(--blue-pale);color:var(--blue)}
+.detail-status.reserved{background:var(--amber-lt);color:var(--amber)}
+.detail-status.paid{background:var(--green-lt);color:var(--green)}
+.detail-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(26,79,160,.08)}
+
+/* Export */
+.export-card{background:var(--white);border-radius:10px;padding:1.5rem;border:1px solid rgba(26,79,160,0.08);box-shadow:0 2px 10px rgba(26,79,160,0.05);margin-bottom:2rem}
+.export-title{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid rgba(26,79,160,.08)}
+.export-row{display:flex;gap:1rem;flex-wrap:wrap}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--blue-deep);color:var(--white);border-radius:6px;padding:.75rem 1.5rem;font-size:.82rem;font-weight:700;z-index:2000;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Responsive */
+@media(max-width:700px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .action-grid{grid-template-columns:1fr}
+  .number-grid{grid-template-columns:repeat(auto-fill,minmax(48px,1fr))}
+  .admin-header{padding:1rem 1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <p class="login-title">Missão Filhos de Maria</p>
+    <p class="login-sub">Painel do Organizador</p>
+    <input class="login-input" type="password" id="passwordInput"
+      placeholder="Digite a senha" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="login-btn" onclick="tryLogin()">Entrar no Painel</button>
+    <div class="login-error" id="loginError">Senha incorreta. Tente novamente.</div>
+  </div>
+</div>
+
+<!-- ══ ADMIN SCREEN ══ -->
+<div class="admin-screen" id="adminScreen">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <h1>Painel do Organizador</h1>
+      <p>Ação Entre Amigos · Casa de Maria</p>
+    </div>
+    <div class="admin-header-right">
+      <a class="btn-view-public" href="/acao" target="_blank">Ver página pública ↗</a>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="admin-main">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num s-free" id="cnt-free">—</div><div class="stat-label">Disponíveis</div></div>
+      <div class="stat-card"><div class="stat-num s-reserved" id="cnt-reserved">—</div><div class="stat-label">Reservados</div></div>
+      <div class="stat-card"><div class="stat-num s-paid" id="cnt-paid">—</div><div class="stat-label">Pagos ✓</div></div>
+      <div class="stat-card"><div class="stat-num s-value" id="cnt-value">—</div><div class="stat-label">Arrecadado</div></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span>Progresso da campanha</span>
+        <strong id="progress-pct">carregando…</strong>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-grid">
+      <!-- Confirmar pagamento -->
+      <div class="action-card">
+        <div class="action-card-title green">✅ Confirmar Pagamento</div>
+        <div class="a-label">Número</div>
+        <div class="input-row">
+          <input class="a-input" id="inputPaid" type="number" placeholder="001 – 500" min="1" max="500">
+        </div>
+        <div class="a-label">Nome do pagante</div>
+        <div class="input-row">
+          <input class="a-input" id="inputPaidName" type="text" placeholder="Nome completo">
+          <button class="btn-action green" onclick="adminSet('paid','inputPaid','inputPaidName')">Confirmar</button>
+        </div>
+      </div>
+
+      <!-- Reservar -->
+      <div class="action-card">
+        <div class="action-card-title amber">⏳ Reservar Número</div>
+        <div class="a-label">Número</div>
+        <div class="input-row">
+          <input class="a-input" id="inputReserved" type="number" placeholder="001 – 500" min="1" max="500">
+        </div>
+        <div class="a-label">Nome</div>
+        <div class="input-row">
+          <input class="a-input" id="inputReservedName" type="text" placeholder="Nome completo">
+          <button class="btn-action amber" onclick="adminSet('reserved','inputReserved','inputReservedName')">Reservar</button>
+        </div>
+      </div>
+
+      <!-- Liberar -->
+      <div class="action-card">
+        <div class="action-card-title red">🔓 Liberar Número</div>
+        <div class="a-label">Número a liberar (volta para disponível)</div>
+        <div class="input-row">
+          <input class="a-input" id="inputFree" type="number" placeholder="001 – 500" min="1" max="500">
+          <button class="btn-action red" onclick="adminSet('free','inputFree',null)">Liberar</button>
+        </div>
+      </div>
+
+      <!-- Buscar -->
+      <div class="action-card">
+        <div class="action-card-title blue">🔍 Buscar por Nome</div>
+        <div class="a-label">Nome do participante</div>
+        <div class="input-row">
+          <input class="a-input" id="searchInput" type="text" placeholder="Ex: Maria da Silva">
+          <button class="btn-action blue" onclick="searchByName()">Buscar</button>
+        </div>
+        <div id="searchResult" style="margin-top:.75rem;font-size:.82rem;color:var(--gray);line-height:1.8"></div>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="export-card">
+      <div class="export-title">📋 Exportar Dados</div>
+      <div class="export-row">
+        <button class="btn-action green" onclick="exportList('paid')">⬇ Baixar lista de PAGOS (.txt)</button>
+        <button class="btn-action amber" onclick="exportList('reserved')">⬇ Baixar RESERVADOS (.txt)</button>
+        <button class="btn-action blue" onclick="exportList('all')">⬇ Baixar TODOS (.txt)</button>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-section">
+      <div class="grid-header-row">
+        <h2>Todos os números</h2>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot free"></div>Disponível</div>
+          <div class="legend-item"><div class="legend-dot reserved"></div>Reservado</div>
+          <div class="legend-item"><div class="legend-dot paid"></div>Pago</div>
+        </div>
+      </div>
+
+      <!-- Sync -->
+      <div class="sync-bar">
+        <div class="sync-status">
+          <div class="sync-dot" id="syncDot"></div>
+          <span id="syncLabel">Conectando…</span>
+        </div>
+        <button class="btn-refresh" onclick="loadData()">↻ Atualizar</button>
+      </div>
+
+      <!-- Filter -->
+      <div class="filter-row">
+        <button class="filter-btn active-all" id="f-all" onclick="setFilter('all')">Todos</button>
+        <button class="filter-btn" id="f-free" onclick="setFilter('free')">Disponíveis</button>
+        <button class="filter-btn" id="f-reserved" onclick="setFilter('reserved')">Reservados</button>
+        <button class="filter-btn" id="f-paid" onclick="setFilter('paid')">Pagos</button>
+      </div>
+
+      <div class="number-grid" id="grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-modal">
+    <div class="detail-header">
+      <h3>Detalhes do número</h3>
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-num" id="d-num">—</div>
+      <div class="detail-status free" id="d-status">Disponível</div>
+      <div class="detail-info">
+        <p><strong id="d-name">—</strong></p>
+        <p id="d-phone"></p>
+      </div>
+      <div class="detail-actions" id="d-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ AUTH ══
+function tryLogin() {
+  const val = document.getElementById('passwordInput').value;
+  if (val === ADMIN_PASSWORD) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').classList.add('show');
+    init();
+  } else {
+    document.getElementById('loginError').classList.add('show');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordInput').focus();
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  location.reload();
+}
+
+// Check session
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminScreen').classList.add('show');
+}
+
+// ══ SUPABASE ══
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const TOTAL = 500;
+let state = {};
+let currentFilter = 'all';
+let detailNum = null;
+
+// ══ LOAD ══
+async function loadData() {
+  setSyncStatus('syncing', 'Atualizando…');
+  try {
+    const { data, error } = await db.from('rifa_numeros').select('*').order('numero');
+    if (error) throw error;
+    state = {};
+    data.forEach(r => { state[r.numero] = { status: r.status, nome: r.nome, telefone: r.telefone }; });
+    for (let i = 1; i <= TOTAL; i++) { if (!state[i]) state[i] = { status: 'free' }; }
+    buildGrid();
+    updateStats();
+    setSyncStatus('ok', `Sincronizado — ${new Date().toLocaleTimeString('pt-BR')}`);
+  } catch(e) {
+    console.error(e);
+    setSyncStatus('error', 'Erro de conexão.');
+  }
+}
+
+// ══ REALTIME ══
+function setupRealtime() {
+  db.channel('admin_realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'rifa_numeros' }, payload => {
+      const row = payload.new;
+      if (row?.numero) {
+        state[row.numero] = { status: row.status, nome: row.nome, telefone: row.telefone };
+        buildGrid();
+        updateStats();
+        setSyncStatus('ok', `Atualizado — ${new Date().toLocaleTimeString('pt-BR')}`);
+      }
+    }).subscribe();
+}
+
+// ══ UPDATE ══
+async function updateNumber(numero, status, nome = null, telefone = null) {
+  try {
+    const { error } = await db.from('rifa_numeros').update({
+      status, nome: nome || null, telefone: telefone || null,
+      updated_at: new Date().toISOString()
+    }).eq('numero', numero);
+    if (error) throw error;
+    state[numero] = { status, nome, telefone };
+    return true;
+  } catch(e) {
+    console.error(e);
+    showToast('Erro ao salvar. Tente novamente.');
+    return false;
+  }
+}
+
+// ══ GRID ══
+function setFilter(f) {
+  currentFilter = f;
+  ['all','free','reserved','paid'].forEach(k => {
+    document.getElementById(`f-${k}`).className = 'filter-btn' + (k === f ? ` active-${k}` : '');
+  });
+  buildGrid();
+}
+
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= TOTAL; i++) {
+    const s = state[i] || { status: 'free' };
+    if (currentFilter !== 'all' && s.status !== currentFilter) continue;
+    const btn = document.createElement('button');
+    btn.className = `num-btn ${s.status}`;
+    btn.textContent = String(i).padStart(3, '0');
+    if (s.nome) btn.title = s.nome;
+    btn.onclick = () => openDetail(i);
+    grid.appendChild(btn);
+  }
+}
+
+function buildGridLoading() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= TOTAL; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn loading-grid';
+    btn.textContent = String(i).padStart(3,'0');
+    btn.disabled = true;
+    grid.appendChild(btn);
+  }
+}
+
+// ══ STATS ══
+function updateStats() {
+  let free = 0, reserved = 0, paid = 0;
+  for (let i = 1; i <= TOTAL; i++) {
+    const s = (state[i] || {}).status;
+    if (s === 'free') free++;
+    else if (s === 'reserved') reserved++;
+    else if (s === 'paid') paid++;
+  }
+  document.getElementById('cnt-free').textContent = free;
+  document.getElementById('cnt-reserved').textContent = reserved;
+  document.getElementById('cnt-paid').textContent = paid;
+  document.getElementById('cnt-value').textContent = `R$ ${(paid * 25).toLocaleString('pt-BR')}`;
+  const sold = reserved + paid;
+  const pct = Math.round((sold / TOTAL) * 100);
+  document.getElementById('progress-pct').textContent = `${pct}% vendidos`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ══ ADMIN ACTIONS ══
+async function adminSet(status, numId, nameId) {
+  const val = parseInt(document.getElementById(numId).value);
+  if (!val || val < 1 || val > TOTAL) { showToast('Número inválido'); return; }
+  const name = nameId ? document.getElementById(nameId).value.trim() : null;
+  const ok = await updateNumber(val, status, name || state[val]?.nome);
+  if (ok) {
+    document.getElementById(numId).value = '';
+    if (nameId) document.getElementById(nameId).value = '';
+    buildGrid(); updateStats();
+    const labels = { paid:`Nº ${String(val).padStart(3,'0')} PAGO ✅`, reserved:`Nº ${String(val).padStart(3,'0')} reservado ⏳`, free:`Nº ${String(val).padStart(3,'0')} liberado 🔓` };
+    showToast(labels[status]);
+  }
+}
+
+// ══ SEARCH ══
+function searchByName() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!q) return;
+  const results = [];
+  for (let i = 1; i <= TOTAL; i++) {
+    const s = state[i];
+    if (s?.nome?.toLowerCase().includes(q)) {
+      results.push({ num: i, ...s });
+    }
+  }
+  const el = document.getElementById('searchResult');
+  if (!results.length) { el.innerHTML = '<span style="color:var(--red)">Nenhum resultado encontrado.</span>'; return; }
+  el.innerHTML = results.map(r =>
+    `<div style="padding:.3rem 0;border-bottom:1px solid rgba(26,79,160,.06)">
+      <strong>Nº ${String(r.num).padStart(3,'0')}</strong> · ${r.nome || '—'}
+      <span style="margin-left:.5rem;font-size:.72rem;padding:.15rem .5rem;border-radius:10px;background:${r.status==='paid'?'var(--green-lt)':r.status==='reserved'?'var(--amber-lt)':'var(--blue-pale)'};color:${r.status==='paid'?'var(--green)':r.status==='reserved'?'var(--amber)':'var(--blue)'}">
+        ${r.status==='paid'?'Pago':r.status==='reserved'?'Reservado':'Livre'}
+      </span>
+    </div>`
+  ).join('');
+}
+
+// ══ DETAIL MODAL ══
+function openDetail(num) {
+  detailNum = num;
+  const s = state[num] || { status: 'free' };
+  document.getElementById('d-num').textContent = `🎟️ Nº ${String(num).padStart(3,'0')}`;
+
+  const statusEl = document.getElementById('d-status');
+  const labels = { free: 'Disponível', reserved: 'Reservado ⏳', paid: 'Pago ✅' };
+  statusEl.textContent = labels[s.status];
+  statusEl.className = `detail-status ${s.status}`;
+
+  document.getElementById('d-name').textContent = s.nome || '—';
+  document.getElementById('d-phone').textContent = s.telefone ? `📱 ${s.telefone}` : '';
+
+  // Actions
+  const acts = document.getElementById('d-actions');
+  acts.innerHTML = '';
+  if (s.status !== 'paid') {
+    const b1 = document.createElement('button');
+    b1.className = 'btn-action green';
+    b1.textContent = '✅ Marcar como Pago';
+    b1.onclick = async () => { await updateNumber(num,'paid',s.nome,s.telefone); buildGrid(); updateStats(); closeDetail(); showToast(`Nº ${String(num).padStart(3,'0')} PAGO ✅`); };
+    acts.appendChild(b1);
+  }
+  if (s.status !== 'reserved') {
+    const b2 = document.createElement('button');
+    b2.className = 'btn-action amber';
+    b2.textContent = '⏳ Reservar';
+    b2.onclick = async () => { await updateNumber(num,'reserved',s.nome,s.telefone); buildGrid(); updateStats(); closeDetail(); showToast(`Nº ${String(num).padStart(3,'0')} reservado ⏳`); };
+    acts.appendChild(b2);
+  }
+  if (s.status !== 'free') {
+    const b3 = document.createElement('button');
+    b3.className = 'btn-action red';
+    b3.textContent = '🔓 Liberar';
+    b3.onclick = async () => { await updateNumber(num,'free'); buildGrid(); updateStats(); closeDetail(); showToast(`Nº ${String(num).padStart(3,'0')} liberado 🔓`); };
+    acts.appendChild(b3);
+  }
+
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  detailNum = null;
+}
+
+document.getElementById('detailOverlay').addEventListener('click', e => { if (e.target === document.getElementById('detailOverlay')) closeDetail(); });
+
+// ══ EXPORT ══
+async function exportList(type) {
+  let txt = `AÇÃO ENTRE AMIGOS — CASA DE MARIA\n`;
+  txt += `Gerado em: ${new Date().toLocaleString('pt-BR')}\n`;
+  txt += '='.repeat(50) + '\n\n';
+  let count = 0;
+  const statusLabel = { paid:'PAGO', reserved:'RESERVADO', free:'LIVRE' };
+  for (let i = 1; i <= TOTAL; i++) {
+    const s = state[i];
+    if (!s) continue;
+    if (type !== 'all' && s.status !== type) continue;
+    txt += `Nº ${String(i).padStart(3,'0')} | ${statusLabel[s.status]} | ${s.nome || '—'} | ${s.telefone || '—'}\n`;
+    count++;
+  }
+  txt += `\nTotal: ${count} números`;
+  if (type === 'paid') txt += ` | Arrecadado: R$ ${(count*25).toLocaleString('pt-BR')}`;
+  const blob = new Blob([txt], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `acao-${type}-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.txt`;
+  a.click();
+  showToast('Lista exportada! 📋');
+}
+
+// ══ SYNC STATUS ══
+function setSyncStatus(type, label) {
+  const dot = document.getElementById('syncDot');
+  dot.className = 'sync-dot' + (type==='syncing'?' syncing':type==='error'?' error':'');
+  document.getElementById('syncLabel').textContent = label;
+}
+
+// ══ TOAST ══
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ══ INIT ══
+function init() {
+  buildGridLoading();
+  loadData();
+  setupRealtime();
+  setInterval(loadData, 30000);
+}
+
+// Auto-init se já autenticado
+if (sessionStorage.getItem('admin_auth') === '1') init();
+</script>
+</body>
+</html>
